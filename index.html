@@ -1,0 +1,2517 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relais pour la vie 2027 - Tableau de bord officiel</title>
+  <meta name="description" content="Tableau de bord interactif autonome et haute fiabilité pour le Relais pour la vie 2027 de la Société canadienne du cancer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base variables */
+    :root {
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --blue-900: #0f2d59;
+      --blue-800: #00509d;
+      --blue-700: #0066c0;
+      --blue-600: #0084ff;
+      --blue-500: #2563eb;
+      --blue-100: #dbeafe;
+      --blue-50: #eff6ff;
+      --yellow-400: #fac800;
+      --yellow-300: #ffde00;
+      --yellow-50: #fefce8;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+      --red-600: #dc2626;
+      --red-50: #fef2f2;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--font-sans);
+      color: var(--slate-800);
+      background-color: #fbf9f4;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding: 1rem;
+    }
+    @media (min-width: 768px) {
+      body { padding: 1.5rem; }
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: var(--slate-100);
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: var(--slate-300);
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--slate-400);
+    }
+    /* Layout & Utilities */
+    .app-container {
+      max-width: 1540px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: rgba(0, 132, 255, 0.3);
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    .font-mono {
+      font-family: var(--font-mono);
+    }
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background-color: var(--blue-700);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(0, 102, 192, 0.2);
+    }
+    .btn-primary:hover {
+      background-color: var(--blue-800);
+    }
+    .btn-amber {
+      background-color: var(--yellow-400);
+      color: var(--slate-900);
+      box-shadow: 0 1px 2px rgba(250, 200, 0, 0.3);
+    }
+    .btn-amber:hover {
+      background-color: var(--yellow-300);
+    }
+    .btn-secondary {
+      background-color: var(--slate-100);
+      color: var(--slate-700);
+      border-color: var(--slate-200);
+    }
+    .btn-secondary:hover {
+      background-color: var(--slate-200);
+      color: var(--slate-900);
+    }
+    .btn-outline {
+      background-color: transparent;
+      border-color: var(--slate-300);
+      color: var(--slate-700);
+    }
+    .btn-outline:hover {
+      background-color: var(--slate-100);
+    }
+    /* Pills & Tabs */
+    .tab-group {
+      display: inline-flex;
+      background: var(--slate-100);
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--slate-200);
+      gap: 0.25rem;
+    }
+    .tab-btn {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 0.375rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--slate-600);
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover {
+      color: var(--slate-900);
+    }
+    .tab-btn.active {
+      background: var(--blue-700);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      text-align: left;
+    }
+    .data-table th {
+      background: var(--slate-50);
+      color: var(--slate-700);
+      padding: 0.55rem 0.65rem;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid var(--slate-200);
+      z-index: 5;
+    }
+    .data-table td {
+      padding: 0.5rem 0.65rem;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .data-table tbody tr {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .data-table tbody tr:hover {
+      background: rgba(239, 246, 255, 0.6);
+    }
+    /* Rank Badges */
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 800;
+    }
+    .rank-1 { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .rank-2 { background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; }
+    .rank-3 { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #ffffff;
+      border-radius: 0.85rem;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.1);
+      border: 1px solid var(--slate-200);
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.96);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-overlay.open .modal-box {
+      transform: scale(1);
+    }
+    /* Drag & Drop Area */
+    .drop-zone {
+      border: 2px dashed var(--slate-300);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+      background: var(--slate-50);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--blue-600);
+      background: var(--blue-50);
+    }
+    /* Print */
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .card { box-shadow: none !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Header -->
+    <header class="card no-print" style="padding: 0.85rem 1.15rem;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.85rem;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 2.6rem; height: 2.6rem; border-radius: 0.6rem; background: linear-gradient(135deg, var(--blue-900), var(--blue-700)); display: flex; align-items: center; justify-content: center; color: var(--yellow-400); box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+              <div style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--yellow-300);"></div>
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.45rem;">
+                <h1 style="font-size: 1.35rem; font-weight: 900; color: var(--slate-900); letter-spacing: -0.03em; line-height: 1;">
+                  Relais pour la vie <span style="color: var(--blue-700);">2027</span>
+                </h1>
+                <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; background: var(--yellow-400); color: var(--slate-950); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">SCC</span>
+              </div>
+              <p style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); margin-top: 0.2rem;">Société canadienne du cancer · Tableau de bord consolidé</p>
+            </div>
+          </div>
+          <div class="tab-group">
+            <button id="tab-btn-dashboard" class="tab-btn active" onclick="switchTab('dashboard')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12c.55 0 1-.45.95-1A10 10 0 0 0 13 2.05c-.55-.05-1 .4-1 .95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/></svg>
+              Vue Synthèse
+            </button>
+            <button id="tab-btn-details" class="tab-btn" onclick="switchTab('details')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 5h20M6 12h12M9 19h6"/></svg>
+              Vue Détaillée
+            </button>
+          </div>
+          <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--slate-600); background: var(--slate-50); border: 1px solid var(--slate-200); padding: 0.25rem 0.65rem; border-radius: 0.375rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-400)" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"/><rect width="18" height="18" x="3" y="4" rx="2"/></svg>
+            <span>Mise à jour :</span>
+            <strong id="header-last-updated" style="color: var(--slate-900); font-weight: 700;">13 avril 2027</strong>
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem;">
+          <button class="btn btn-amber" onclick="downloadAutonomousHtml()" title="Télécharger le fichier HTML complet avec les données actuelles intégrées">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5"/></svg>
+            Fichier autonome (.html)
+          </button>
+          <button class="btn btn-primary" onclick="openImportModal()" title="Importer et croiser les 3 fichiers CSV de la campagne">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 13v8M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2M8 17l4-4 4 4"/></svg>
+            Charger CSV
+          </button>
+          <button class="btn btn-secondary" onclick="openTargetsModal()" title="Modifier les objectifs">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Objectifs
+          </button>
+          <button class="btn btn-secondary" onclick="window.print()" title="Imprimer ou enregistrer en PDF">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            Imprimer
+          </button>
+          <button class="btn btn-secondary" onclick="confirmReset()" title="Rétablir les données de démonstration">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Notification Banner (Reconciliation feedback) -->
+    <div id="reconciliation-alert" class="card no-print" style="display: none; padding: 0.75rem 1rem; background: var(--emerald-50); border-color: rgba(5, 150, 105, 0.3);">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div>
+            <div id="reconciliation-alert-title" style="font-size: 0.8rem; font-weight: 700; color: #065f46;">Données réconciliées avec succès</div>
+            <div id="reconciliation-alert-desc" style="font-size: 0.7rem; color: #047857;">Détails de la réconciliation automatique</div>
+          </div>
+        </div>
+        <button onclick="dismissReconciliationAlert()" style="background: none; border: none; cursor: pointer; color: #065f46; font-size: 1.1rem; font-weight: bold;">&times;</button>
+      </div>
+    </div>
+
+    <!-- MAIN VIEW 1: Dashboard (Synthèse) -->
+    <main id="view-dashboard" style="display: flex; flex-direction: column; gap: 1rem;">
+      <!-- KPIs Row -->
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
+        <!-- KPI 1: Participants -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-700); display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              # de participants
+            </span>
+            <span id="kpi-participants-pct" style="font-size: 0.65rem; font-weight: 700; color: var(--blue-700); background: var(--blue-50); padding: 0.15rem 0.45rem; border-radius: 0.25rem;">41%</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0.25rem 0;">
+            <div id="gauge-participants-container"></div>
+            <div style="width: 100%; display: flex; justify-content: space-between; padding: 0 0.5rem; font-size: 0.65rem; font-weight: 700; color: var(--slate-400); margin-top: -0.4rem;">
+              <span>0</span>
+              <span id="kpi-participants-target-label" style="color: var(--slate-600);">Cible: 200</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 2: Teams -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-700); display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-800)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              # d'équipes
+            </span>
+            <span id="kpi-teams-pct" style="font-size: 0.65rem; font-weight: 700; color: var(--emerald-600); background: var(--emerald-50); padding: 0.15rem 0.45rem; border-radius: 0.25rem;">93%</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0.25rem 0;">
+            <div id="gauge-teams-container"></div>
+            <div style="width: 100%; display: flex; justify-content: space-between; padding: 0 0.5rem; font-size: 0.65rem; font-weight: 700; color: var(--slate-400); margin-top: -0.4rem;">
+              <span>0</span>
+              <span id="kpi-teams-target-label" style="color: var(--slate-600);">Cible: 30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3: Solo Walkers -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-700); display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--amber-600)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>
+              Marcheurs Solo
+            </span>
+            <span id="kpi-solo-pct" style="font-size: 0.65rem; color: var(--slate-500); font-weight: 600;">1% du total</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.6rem 0;">
+            <span id="kpi-solo-count" class="tabular-nums" style="font-size: 2.25rem; font-weight: 900; color: var(--slate-900); line-height: 1;">1</span>
+            <span style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.25rem;">marcheurs individuels</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: Goal % -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-700); display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+              % Objectif $
+            </span>
+            <span id="kpi-goal-badge" style="font-size: 0.65rem; font-weight: 700; color: var(--blue-700); background: var(--blue-50); padding: 0.15rem 0.45rem; border-radius: 0.25rem;">Objectif 165 000 $</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.6rem 0;">
+            <span id="kpi-goal-pct" class="tabular-nums" style="font-size: 2.25rem; font-weight: 900; color: var(--blue-700); line-height: 1;">15,8 %</span>
+            <span style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.25rem;">de l'objectif atteint</span>
+          </div>
+        </div>
+
+        <!-- KPI 5: Total Donations -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-700); display: flex; align-items: center; gap: 0.4rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Total des Dons
+            </span>
+            <span style="font-size: 0.65rem; font-weight: 700; color: var(--emerald-600); background: var(--emerald-50); padding: 0.15rem 0.45rem; border-radius: 0.25rem;">Amassé</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.6rem 0;">
+            <span id="kpi-total-formatted" class="tabular-nums" style="font-size: 2rem; font-weight: 900; color: var(--slate-900); line-height: 1;">$26.04K</span>
+            <span id="kpi-total-exact" class="tabular-nums" style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.25rem;">26 040 $ CAD</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 Columns Section: Top Contributors | Top Teams | Overall Gauge -->
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
+        <!-- Top 10 Contributors -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; height: 410px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--slate-100); margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <div style="width: 1.6rem; height: 1.6rem; border-radius: 0.35rem; background: var(--amber-50); color: var(--amber-600); display: flex; align-items: center; justify-content: center;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="m15.5 13 1.5 8.5-4-3-4 3 1.5-8.5"/></svg>
+              </div>
+              <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900);">Top contributeurs</h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span id="top-contrib-count-badge" style="font-size: 0.7rem; background: var(--blue-50); color: var(--blue-700); font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 9999px;">82 marcheurs</span>
+              <button onclick="switchTab('details')" class="btn" style="padding: 0.2rem 0.4rem; color: var(--blue-700); font-weight: 700;">
+                Tous <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 7h10v10M7 17 17 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="custom-scroll" style="flex: 1; overflow-y: auto; border: 1px solid var(--slate-100); border-radius: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 2.2rem; text-align: center;">#</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th style="text-align: right;">Somme ($)</th>
+                </tr>
+              </thead>
+              <tbody id="top-contributors-tbody"></tbody>
+            </table>
+          </div>
+          <div style="padding-top: 0.5rem; margin-top: 0.25rem; border-top: 1px solid var(--slate-100); display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--slate-500);">
+            <span>Affichage des 10 premiers donateurs</span>
+            <span id="top-contrib-sum" style="font-weight: 700; color: var(--slate-800);">Total : 2 485 $</span>
+          </div>
+        </div>
+
+        <!-- Top 10 Teams -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; height: 410px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--slate-100); margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <div style="width: 1.6rem; height: 1.6rem; border-radius: 0.35rem; background: var(--blue-50); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900);">Top 10 des équipes</h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <span id="top-teams-count-badge" style="font-size: 0.7rem; background: var(--blue-50); color: var(--blue-700); font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 9999px;">28 équipes</span>
+              <button onclick="switchTab('details')" class="btn" style="padding: 0.2rem 0.4rem; color: var(--blue-700); font-weight: 700;">
+                Toutes <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 7h10v10M7 17 17 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="custom-scroll" style="flex: 1; overflow-y: auto; border: 1px solid var(--slate-100); border-radius: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 2.2rem; text-align: center;">#</th>
+                  <th>Nom de l'équipe</th>
+                  <th style="text-align: center;">Membres</th>
+                  <th style="text-align: right;">Dons ($)</th>
+                </tr>
+              </thead>
+              <tbody id="top-teams-tbody"></tbody>
+            </table>
+          </div>
+          <div style="padding-top: 0.5rem; margin-top: 0.25rem; border-top: 1px solid var(--slate-100); display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--slate-500);">
+            <span>Cliquer sur une équipe pour voir ses détails</span>
+            <span id="top-teams-sum" style="font-weight: 700; color: var(--slate-800);">Total : 22 942 $</span>
+          </div>
+        </div>
+
+        <!-- Overall Campaign Goal Gauge -->
+        <div class="card" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; height: 410px; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--slate-100);">
+            <div style="display: flex; align-items: center; gap: 0.45rem;">
+              <div style="width: 1.6rem; height: 1.6rem; border-radius: 0.35rem; background: var(--blue-50); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              </div>
+              <div>
+                <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900); line-height: 1.2;">Atteinte de l'objectif</h3>
+                <span style="font-size: 0.7rem; color: var(--slate-500);">Campagne Relais 2027</span>
+              </div>
+            </div>
+            <span id="goal-gauge-pct-badge" style="font-size: 0.75rem; font-weight: 700; color: var(--blue-700); background: var(--blue-50); border: 1px solid rgba(0, 132, 255, 0.2); padding: 0.2rem 0.55rem; border-radius: 0.35rem;">15,8 %</span>
+          </div>
+
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: -0.5rem;">
+            <div id="goal-gauge-svg-container"></div>
+            <div style="position: absolute; bottom: 1.6rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+              <span style="font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; color: var(--slate-400); text-transform: uppercase;">Total amassé</span>
+              <span id="goal-gauge-amount-big" class="tabular-nums" style="font-size: 2.2rem; font-weight: 900; color: var(--slate-900); line-height: 1;">$26.04K</span>
+              <div style="font-size: 0.75rem; color: var(--slate-600); margin-top: 0.2rem;">
+                Objectif : <strong id="goal-gauge-target-label" style="color: var(--slate-900); font-weight: 700;">165 000 $</strong>
+              </div>
+            </div>
+            <div style="width: 100%; display: flex; justify-content: space-between; padding: 0 1.5rem; font-size: 0.75rem; font-weight: 700; color: var(--slate-500); position: absolute; bottom: 0;">
+              <span>$0K</span>
+              <span id="goal-gauge-target-max">$165K</span>
+            </div>
+          </div>
+
+          <div style="margin: 0.25rem -1rem -1rem -1rem; padding: 0.75rem 1rem; border-top: 1px solid var(--slate-100); background: rgba(248, 250, 252, 0.8); border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem;">
+            <span style="display: flex; align-items: center; gap: 0.4rem; color: var(--slate-600);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.3 2 2 0 3-.8 3-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.5"/></svg>
+              Restant à amasser :
+            </span>
+            <span id="goal-gauge-remaining" class="tabular-nums" style="font-weight: 800; color: var(--slate-800);">138 960 $</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Monthly Evolution Bar Chart -->
+      <section class="card" style="padding: 1rem;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--slate-100); margin-bottom: 0.5rem; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <div style="width: 1.6rem; height: 1.6rem; border-radius: 0.35rem; background: var(--blue-50); color: var(--blue-700); display: flex; align-items: center; justify-content: center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3v16a2 2 0 0 0 2 2h16M18 17V9M13 17V5M8 17v-3"/></svg>
+            </div>
+            <div>
+              <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900); line-height: 1.2;">Progression des dons</h3>
+              <span style="font-size: 0.7rem; color: var(--slate-500);">Évolution de la collecte par période</span>
+            </div>
+          </div>
+          <div class="tab-group">
+            <button id="chart-mode-monthly" class="tab-btn active" onclick="setChartMode('monthly')">Mensuel</button>
+            <button id="chart-mode-cumulative" class="tab-btn" onclick="setChartMode('cumulative')">Cumulatif</button>
+          </div>
+        </div>
+
+        <div style="position: relative; padding: 1.25rem 0.5rem 0.5rem 0.5rem;">
+          <!-- Grid lines -->
+          <div id="chart-grid-lines" style="position: absolute; inset: 0; padding-top: 1.5rem; padding-bottom: 2.5rem; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none;"></div>
+          <!-- Bars Container -->
+          <div id="chart-bars-container" style="display: flex; align-items: flex-end; justify-content: space-around; gap: 1rem; height: 180px; position: relative; z-index: 2; padding: 0 1rem;"></div>
+        </div>
+
+        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--slate-100); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--slate-500); gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <span id="chart-legend-color" style="width: 12px; height: 12px; border-radius: 2px; background: var(--blue-600); display: inline-block;"></span>
+              <span id="chart-legend-text" style="font-weight: 600; color: var(--slate-700);">Dons reçus durant le mois</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <span style="width: 12px; height: 3px; border-radius: 2px; background: var(--yellow-400); display: inline-block;"></span>
+              <span>Plafond mensuel</span>
+            </div>
+          </div>
+          <span style="font-size: 0.7rem;">Moyenne mensuelle : <strong id="chart-avg-monthly" style="color: var(--slate-800);">5 208 $</strong></span>
+        </div>
+      </section>
+    </main>
+
+    <!-- MAIN VIEW 2: Detailed (Vue Détaillée) -->
+    <main id="view-details" style="display: none; flex-direction: column; gap: 1rem;">
+      <!-- Search & Filters Toolbar -->
+      <section class="card" style="padding: 0.85rem 1rem;">
+        <div style="display: flex; flex-direction: column; md-flex-direction: row; justify-content: space-between; align-items: stretch; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1rem; font-weight: 700; color: var(--slate-900); display: flex; align-items: center; gap: 0.45rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Vue Détaillée de la Levée de Fonds
+            </h2>
+            <p style="font-size: 0.75rem; color: var(--slate-500);">Recherche multicritère, filtrage et export exhaustif des contributeurs et des équipes.</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+            <div class="tab-group">
+              <button class="tab-btn active" id="filter-btn-all" onclick="setDetailsFilter('all')">Tous</button>
+              <button class="tab-btn" id="filter-btn-teams" onclick="setDetailsFilter('teams')">Équipes</button>
+              <button class="tab-btn" id="filter-btn-solo" onclick="setDetailsFilter('solo')">Solos</button>
+              <button class="tab-btn" id="filter-btn-donations" onclick="setDetailsFilter('with_donations')">Dons &gt; 0 $</button>
+            </div>
+            <div style="position: relative; min-width: 240px; flex: 1;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-400)" stroke-width="2.5" style="position: absolute; left: 0.65rem; top: 0.65rem;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="details-search-input" type="text" placeholder="Rechercher marcheur, équipe, capitaine..." oninput="handleSearch(this.value)" style="width: 100%; padding: 0.45rem 1.8rem 0.45rem 2rem; font-size: 0.75rem; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: 0.5rem; outline: none;" />
+              <button id="details-search-clear" onclick="clearSearch()" style="display: none; position: absolute; right: 0.5rem; top: 0.45rem; background: none; border: none; cursor: pointer; color: var(--slate-400); font-weight: bold; font-size: 0.9rem;">&times;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Side-by-side Tables: All Contributors | All Teams -->
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1rem;">
+        <!-- All Contributors Card -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; height: 640px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--slate-100); margin-bottom: 0.5rem;">
+            <div>
+              <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900); display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Tous les contributeurs
+              </h3>
+              <span id="all-contributors-count" style="font-size: 0.7rem; color: var(--slate-500);">82 enregistrements trouvés</span>
+            </div>
+            <button class="btn btn-secondary" onclick="exportContributorsCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5"/></svg>
+              CSV
+            </button>
+          </div>
+          <div class="custom-scroll" style="flex: 1; overflow-y: auto; border: 1px solid var(--slate-100); border-radius: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 2.4rem; text-align: center;">#</th>
+                  <th onclick="toggleSortContributors('name')" style="cursor: pointer; user-select: none;">
+                    Nom <span id="sort-icon-contrib-name"></span>
+                  </th>
+                  <th>Prénom</th>
+                  <th>Équipe</th>
+                  <th onclick="toggleSortContributors('amount')" style="text-align: right; cursor: pointer; user-select: none;">
+                    Somme ($) <span id="sort-icon-contrib-amount">▼</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="all-contributors-tbody"></tbody>
+            </table>
+          </div>
+          <div style="padding-top: 0.5rem; margin-top: 0.25rem; border-top: 1px solid var(--slate-100); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--slate-500);">
+            <span id="all-contrib-footer-count">82 contributeurs</span>
+            <span id="all-contrib-footer-sum" class="tabular-nums" style="font-weight: 700; color: var(--slate-900);">Total : 26 040 $</span>
+          </div>
+        </div>
+
+        <!-- All Teams Card -->
+        <div class="card" style="padding: 0.85rem; display: flex; flex-direction: column; height: 640px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid var(--slate-100); margin-bottom: 0.5rem;">
+            <div>
+              <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--slate-900); display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Performance de toutes les équipes
+              </h3>
+              <span id="all-teams-count" style="font-size: 0.7rem; color: var(--slate-500);">28 équipes inscrites</span>
+            </div>
+            <button class="btn btn-secondary" onclick="exportTeamsCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5"/></svg>
+              CSV
+            </button>
+          </div>
+          <div class="custom-scroll" style="flex: 1; overflow-y: auto; border: 1px solid var(--slate-100); border-radius: 0.5rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 2.2rem; text-align: center;">Rang</th>
+                  <th onclick="toggleSortTeams('name')" style="cursor: pointer; user-select: none;">
+                    Nom de l'équipe <span id="sort-icon-team-name"></span>
+                  </th>
+                  <th onclick="toggleSortTeams('participants')" style="text-align: center; cursor: pointer; user-select: none;">
+                    Membres <span id="sort-icon-team-participants"></span>
+                  </th>
+                  <th onclick="toggleSortTeams('goal')" style="text-align: right; cursor: pointer; user-select: none;">
+                    Objectif ($) <span id="sort-icon-team-goal"></span>
+                  </th>
+                  <th style="text-align: right;">% Objectif</th>
+                  <th onclick="toggleSortTeams('amount')" style="text-align: right; cursor: pointer; user-select: none;">
+                    Dons Totaux ($) <span id="sort-icon-team-amount">▼</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="all-teams-tbody"></tbody>
+            </table>
+          </div>
+          <div style="padding-top: 0.5rem; margin-top: 0.25rem; border-top: 1px solid var(--slate-100); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--slate-500);">
+            <span id="all-teams-footer-count">28 équipes</span>
+            <span id="all-teams-footer-sum" class="tabular-nums" style="font-weight: 700; color: var(--slate-900);">Total : 26 040 $</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="no-print" style="padding-top: 0.5rem; font-size: 0.75rem; color: var(--slate-500); border-top: 1px solid rgba(226, 232, 240, 0.7); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-weight: 700; color: var(--slate-700);">Relais pour la vie 2027</span>
+        <span>·</span>
+        <span>Société canadienne du cancer</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span id="footer-data-status" style="font-size: 0.7rem; color: var(--slate-400);">Moteur de réconciliation actif</span>
+        <button onclick="openTargetsModal()" style="background: none; border: none; cursor: pointer; color: var(--slate-600); font-size: 0.75rem; text-decoration: underline;">Modifier les cibles</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- MODAL 1: Team Composition / Details -->
+  <div id="modal-team" class="modal-overlay">
+    <div class="modal-box" style="max-width: 580px;">
+      <div style="padding: 1rem 1.25rem; background: linear-gradient(135deg, var(--blue-900), var(--blue-700)); color: #fff; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="width: 2.4rem; height: 2.4rem; border-radius: 0.5rem; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: var(--yellow-300);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h2 id="modal-team-title" style="font-size: 1.15rem; font-weight: 800; line-height: 1.2;">Nom de l'équipe</h2>
+            <div id="modal-team-sub" style="font-size: 0.75rem; color: var(--blue-100); margin-top: 0.15rem;">Capitaine : Carolle Bernier</div>
+          </div>
+        </div>
+        <button onclick="closeTeamModal()" style="background: rgba(255,255,255,0.1); border: none; border-radius: 0.35rem; color: #fff; padding: 0.35rem 0.5rem; cursor: pointer; font-size: 1.1rem; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); background: var(--slate-50); border-bottom: 1px solid var(--slate-200); padding: 0.75rem; text-align: center;">
+        <div style="border-right: 1px solid var(--slate-200);">
+          <div style="font-size: 0.65rem; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">Membres</div>
+          <div id="modal-team-kpi-members" class="tabular-nums" style="font-size: 1.15rem; font-weight: 900; color: var(--slate-900);">3</div>
+        </div>
+        <div style="border-right: 1px solid var(--slate-200);">
+          <div style="font-size: 0.65rem; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">Total amassé</div>
+          <div id="modal-team-kpi-amount" class="tabular-nums" style="font-size: 1.15rem; font-weight: 900; color: var(--blue-700);">100 $</div>
+        </div>
+        <div style="border-right: 1px solid var(--slate-200);">
+          <div style="font-size: 0.65rem; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">Objectif équipe</div>
+          <div id="modal-team-kpi-goal" class="tabular-nums" style="font-size: 1.15rem; font-weight: 900; color: var(--slate-900);">900 $</div>
+        </div>
+        <div>
+          <div style="font-size: 0.65rem; font-weight: 700; color: var(--slate-500); text-transform: uppercase;">% Objectif</div>
+          <div id="modal-team-kpi-pct" class="tabular-nums" style="font-size: 1.15rem; font-weight: 900; color: var(--emerald-600);">11,1 %</div>
+        </div>
+      </div>
+
+      <div class="custom-scroll" style="padding: 1rem; flex: 1; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+          <h4 id="modal-team-members-header" style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-600); display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Membres inscrits et dons attribués
+          </h4>
+          <span id="modal-team-avg-member" style="font-size: 0.75rem; color: var(--slate-500);">Moyenne : 1 334 $ / membre</span>
+        </div>
+
+        <div style="border: 1px solid var(--slate-200); border-radius: 0.5rem; overflow: hidden;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 2rem; text-align: center;">#</th>
+                <th>Participant</th>
+                <th style="text-align: center;">Rôle</th>
+                <th style="text-align: right;">Dons récoltés</th>
+              </tr>
+            </thead>
+            <tbody id="modal-team-members-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Direct team donations explanation if exists -->
+        <div id="modal-team-direct-donations-box" style="display: none; margin-top: 0.75rem; padding: 0.75rem; background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: 0.5rem; font-size: 0.75rem; color: var(--blue-900);">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 700;">
+            <span>Dons directs à l'équipe et commandites :</span>
+            <span id="modal-team-direct-amount" class="tabular-nums">4 737 $</span>
+          </div>
+          <div style="font-size: 0.68rem; color: var(--slate-600); margin-top: 0.25rem;">
+            Dons attribués à la page globale de l'équipe (sans participant individuel désigné) et commandites corporatives.
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 0.75rem 1.25rem; background: var(--slate-50); border-top: 1px solid var(--slate-200); display: flex; justify-content: flex-end;">
+        <button class="btn btn-secondary" onclick="closeTeamModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Import CSV (The 3 files) -->
+  <div id="modal-import" class="modal-overlay">
+    <div class="modal-box" style="max-width: 620px;">
+      <div style="padding: 1rem 1.25rem; background: var(--slate-900); color: #fff; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <div style="width: 2.2rem; height: 2.2rem; border-radius: 0.5rem; background: var(--blue-700); display: flex; align-items: center; justify-content: center; color: #fff;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 13v8M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2M8 17l4-4 4 4"/></svg>
+          </div>
+          <div>
+            <h2 style="font-size: 1rem; font-weight: 800; line-height: 1.2;">Mettre à jour les données (3 fichiers CSV)</h2>
+            <p style="font-size: 0.7rem; color: var(--slate-300);">Rapports officiels Société canadienne du cancer / Relais pour la vie</p>
+          </div>
+        </div>
+        <button onclick="closeImportModal()" style="background: none; border: none; color: var(--slate-400); cursor: pointer; font-size: 1.3rem;">&times;</button>
+      </div>
+
+      <div class="custom-scroll" style="padding: 1.25rem; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; font-size: 0.75rem;">
+        <div style="background: var(--blue-50); border: 1px solid var(--blue-100); border-radius: 0.5rem; padding: 0.75rem; display: flex; gap: 0.6rem; color: var(--blue-900); line-height: 1.45;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2" style="flex-shrink: 0; margin-top: 0.1rem;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <strong>Moteur intelligent de réconciliation :</strong> Déposez vos 3 fichiers CSV en même temps ci-dessous. Le système croise automatiquement les dons individuels, attribue les montants aux bons participants, rattache les dons directs aux équipes et consolide l'ensemble.
+          </div>
+        </div>
+
+        <!-- Global Multi-file Drop Zone -->
+        <div id="multi-drop-zone" class="drop-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="triggerMultiFileInput()">
+          <input type="file" id="multi-file-input" multiple accept=".csv,text/csv,text/plain" style="display: none;" onchange="handleMultiFilesSelected(this.files)" />
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2" style="margin: 0 auto 0.4rem;"><path d="M12 13v8M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2M8 17l4-4 4 4"/></svg>
+          <div style="font-weight: 700; color: var(--slate-800); font-size: 0.85rem;">Glissez et déposez vos 3 fichiers CSV ici en même temps</div>
+          <div style="font-size: 0.7rem; color: var(--slate-500); margin-top: 0.2rem;">ou cliquez pour sélectionner un ou plusieurs fichiers</div>
+        </div>
+
+        <!-- The 3 File Slots -->
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+          <!-- Slot 1: Gift Details -->
+          <div class="card" style="padding: 0.75rem; background: var(--slate-50);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-weight: 700; color: var(--slate-800); display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                1. Gift Details Report (.csv)
+              </span>
+              <span id="slot-status-gifts" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+            </div>
+            <input type="file" id="file-input-gifts" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'gifts')" style="font-size: 0.75rem; width: 100%;" />
+            <div id="slot-desc-gifts" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Transactions détaillées de tous les dons, montants, dates et bénéficiaires.</div>
+          </div>
+
+          <!-- Slot 2: Participant Registration -->
+          <div class="card" style="padding: 0.75rem; background: var(--slate-50);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-weight: 700; color: var(--slate-800); display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                2. Participant Registration Report_by event (.csv)
+              </span>
+              <span id="slot-status-participants" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+            </div>
+            <input type="file" id="file-input-participants" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'participants')" style="font-size: 0.75rem; width: 100%;" />
+            <div id="slot-desc-participants" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Registre des marcheurs, rôle (capitaine/membre/solo), équipe de rattachement.</div>
+          </div>
+
+          <!-- Slot 3: Team Performance -->
+          <div class="card" style="padding: 0.75rem; background: var(--slate-50);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-weight: 700; color: var(--slate-800); display: flex; align-items: center; gap: 0.4rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                3. Team Performance Report (.csv)
+              </span>
+              <span id="slot-status-teams" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+            </div>
+            <input type="file" id="file-input-teams" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'teams')" style="font-size: 0.75rem; width: 100%;" />
+            <div id="slot-desc-teams" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Totaux officiels par équipe, capitaines et nombre de membres.</div>
+          </div>
+        </div>
+
+        <div id="import-error-box" style="display: none; padding: 0.75rem; background: var(--red-50); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 0.5rem; color: var(--red-600); font-weight: 600;"></div>
+      </div>
+
+      <div style="padding: 0.85rem 1.25rem; background: var(--slate-50); border-top: 1px solid var(--slate-200); display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-outline" onclick="clearImportSelection()">Effacer la sélection</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="closeImportModal()">Annuler</button>
+          <button id="btn-apply-import" class="btn btn-primary" onclick="processAndApplyImport()" disabled>Appliquer et actualiser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Targets Configuration -->
+  <div id="modal-targets" class="modal-overlay">
+    <div class="modal-box" style="max-width: 440px;">
+      <div style="padding: 1rem 1.25rem; background: var(--slate-900); color: #fff; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-600)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <h2 style="font-size: 1rem; font-weight: 800;">Modifier les objectifs du Relais</h2>
+        </div>
+        <button onclick="closeTargetsModal()" style="background: none; border: none; color: var(--slate-400); cursor: pointer; font-size: 1.3rem;">&times;</button>
+      </div>
+
+      <form onsubmit="handleSaveTargets(event)" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; font-size: 0.75rem;">
+        <div>
+          <label style="display: block; font-weight: 700; color: var(--slate-700); margin-bottom: 0.3rem;">Objectif financier ($ CAD)</label>
+          <input id="input-target-amount" type="number" step="1000" min="1000" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--slate-300); border-radius: 0.375rem; font-size: 0.85rem; font-weight: 700;" />
+          <span style="font-size: 0.65rem; color: var(--slate-500); margin-top: 0.2rem; display: block;">Par défaut : 165 000 $ CAD</span>
+        </div>
+        <div>
+          <label style="display: block; font-weight: 700; color: var(--slate-700); margin-bottom: 0.3rem;">Cible du nombre de participants</label>
+          <input id="input-target-participants" type="number" step="1" min="5" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--slate-300); border-radius: 0.375rem; font-size: 0.85rem; font-weight: 700;" />
+          <span style="font-size: 0.65rem; color: var(--slate-500); margin-top: 0.2rem; display: block;">Par défaut : 200 participants</span>
+        </div>
+        <div>
+          <label style="display: block; font-weight: 700; color: var(--slate-700); margin-bottom: 0.3rem;">Cible du nombre d'équipes</label>
+          <input id="input-target-teams" type="number" step="1" min="2" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--slate-300); border-radius: 0.375rem; font-size: 0.85rem; font-weight: 700;" />
+          <span style="font-size: 0.65rem; color: var(--slate-500); margin-top: 0.2rem; display: block;">Par défaut : 30 équipes</span>
+        </div>
+        <div style="padding-top: 0.75rem; border-top: 1px solid var(--slate-100); display: flex; justify-content: space-between; align-items: center;">
+          <button type="button" class="btn btn-outline" onclick="resetDefaultTargets()">Rétablir par défaut</button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeTargetsModal()">Annuler</button>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Reset Confirmation -->
+  <div id="modal-reset" class="modal-overlay">
+    <div class="modal-box" style="max-width: 380px; padding: 1.25rem;">
+      <h3 style="font-size: 1rem; font-weight: 800; color: var(--slate-900); margin-bottom: 0.5rem;">Rétablir les données de référence ?</h3>
+      <p style="font-size: 0.75rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1rem;">
+        Cette action restaurera les données de référence du Relais pour la vie 2027 et réinitialisera les fichiers importés localement.
+      </p>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+        <button class="btn btn-secondary" onclick="closeResetModal()">Annuler</button>
+        <button class="btn" style="background: var(--red-600); color: #fff;" onclick="executeReset()">Rétablir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas (Autonomous, zero external dependencies) -->
+  <canvas id="confetti-canvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 1000; display: none;"></canvas>
+
+  <!-- Application Logic -->
+  <script>
+    /* ==========================================================================
+       1. REFERENCE CAMPAIGN DATA (Relais pour la vie 2027)
+       ========================================================================== */
+    const REFERENCE_DATA = {
+      lastUpdated: "4 novembre 2026",
+      targets: {
+        participants: 200,
+        teams: 30,
+        amountGoal: 165000
+      },
+      kpis: {
+        participants: 7,
+        teams: 4,
+        solo: 1,
+        totalDonations: 100
+      },
+      topContributors: [
+        { id: "5158270", firstName: "Yves", lastName: "Poulette", team: "Les amis du Relais", isCaptain: false, totalAmount: 100, donorCount: 1, fromRegistration: true },
+        { id: null, firstName: "Carolle", lastName: "Bernier", team: "Les amis du Relais", isCaptain: true, totalAmount: 0, donorCount: 0, fromRegistration: true },
+        { id: null, firstName: "Nancy", lastName: "Guilbert", team: "Femmes d'action femmes de coeur", isCaptain: true, totalAmount: 0, donorCount: 0, fromRegistration: true },
+        { id: null, firstName: "Micheline", lastName: "Graveline", team: "Les étoiles", isCaptain: false, totalAmount: 0, donorCount: 0, fromRegistration: true },
+        { id: null, firstName: "Yvon", lastName: "Voyer", team: "Les amis du Relais", isCaptain: false, totalAmount: 0, donorCount: 0, fromRegistration: true },
+        { id: null, firstName: "Clémence-Justine-Eugénie", lastName: "Parent-Corbeil-Bérubé", team: "Jerry's Angels", isCaptain: true, totalAmount: 0, donorCount: 0, fromRegistration: true },
+        { id: null, firstName: "Francois", lastName: "Hallé", team: "Marcheur solo", isCaptain: false, totalAmount: 0, donorCount: 0, fromRegistration: true }
+      ],
+      allTeams: [
+        { id: "560231", name: "Les amis du Relais", participants: 3, amount: 100, goal: 900, teamGoal: 0, cumulativeGoal: 900, captain: "Carolle Bernier", directDonations: 0 },
+        { id: null, name: "Femmes d'action femmes de coeur", participants: 1, amount: 0, goal: 2500, teamGoal: 2500, cumulativeGoal: 1000, captain: "Nancy Guilbert", directDonations: 0 },
+        { id: null, name: "Jerry's Angels", participants: 1, amount: 0, goal: 2500, teamGoal: 2500, cumulativeGoal: 300, captain: "Clémence-Justine-Eugénie Parent-Corbeil-Bérubé", directDonations: 0 },
+        { id: null, name: "Les étoiles", participants: 1, amount: 0, goal: 300, teamGoal: 0, cumulativeGoal: 300, captain: "", directDonations: 0 }
+      ],
+      topTeams: [
+        { id: "560231", name: "Les amis du Relais", participants: 3, amount: 100, goal: 900, teamGoal: 0, cumulativeGoal: 900, captain: "Carolle Bernier", directDonations: 0 },
+        { id: null, name: "Femmes d'action femmes de coeur", participants: 1, amount: 0, goal: 2500, teamGoal: 2500, cumulativeGoal: 1000, captain: "Nancy Guilbert", directDonations: 0 },
+        { id: null, name: "Jerry's Angels", participants: 1, amount: 0, goal: 2500, teamGoal: 2500, cumulativeGoal: 300, captain: "Clémence-Justine-Eugénie Parent-Corbeil-Bérubé", directDonations: 0 },
+        { id: null, name: "Les étoiles", participants: 1, amount: 0, goal: 300, teamGoal: 0, cumulativeGoal: 300, captain: "", directDonations: 0 }
+      ],
+      monthlyProgress: [
+        { label: "novembre", year: "2026", amount: 100 }
+      ],
+      diagnostics: {
+        totalGiftsCount: 1,
+        matchedGiftsCount: 1,
+        teamGiftsCount: 0,
+        generalGiftsCount: 0,
+        totalGiftsAmount: 100,
+        totalTeamsAmount: 100,
+        reconciliationMessage: "1 don attribué à 7 marcheurs (100 $ à Yves Poulette), 4 équipes actives."
+      }
+    };
+
+    /* ==========================================================================
+       2. APPLICATION STATE
+       ========================================================================== */
+    const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v7';
+    let appState = null;
+    let activeTab = 'dashboard';
+    let chartMode = 'monthly';
+    let detailsFilter = 'all';
+    let searchQuery = '';
+    let sortContribField = 'amount';
+    let sortContribDir = 'desc';
+    let sortTeamField = 'amount';
+    let sortTeamDir = 'desc';
+
+    // Temporary upload store
+    let uploadedFiles = {
+      gifts: null,
+      participants: null,
+      teams: null
+    };
+
+    /* ==========================================================================
+       3. UTILITY FORMATTERS
+       ========================================================================== */
+    function formatCurrencyK(amount) {
+      if (isNaN(amount) || amount === null || amount === undefined) return '$0';
+      if (Math.abs(amount) >= 1000) {
+        return '$' + (amount / 1000).toFixed(2).replace('.', ',') + 'K';
+      }
+      return formatCurrencyExact(amount);
+    }
+
+    function formatCurrencyExact(amount) {
+      if (isNaN(amount) || amount === null || amount === undefined) return '0 $';
+      return Math.round(amount).toLocaleString('fr-CA').replace(/\s/g, ' ') + ' $';
+    }
+
+    function formatNumber(num) {
+      if (isNaN(num) || num === null || num === undefined) return '0';
+      return Math.round(num).toLocaleString('fr-CA');
+    }
+
+    function normalizeText(str) {
+      if (!str) return '';
+      return String(str)
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    function formatName(str) {
+      if (!str) return '';
+      return String(str).trim().split(/[\s-]+/).map(word => {
+        if (!word) return '';
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }).join(' ');
+    }
+
+    /* ==========================================================================
+       4. ROBUST CSV PARSER (RFC 4180 compliant, auto-delimiter)
+       ========================================================================== */
+    function parseCSV(content) {
+      if (!content || typeof content !== 'string') return [];
+      // Strip UTF-8 BOM if present
+      let text = content.charCodeAt(0) === 0xFEFF ? content.slice(1) : content;
+      // Auto-detect delimiter from first lines: , or ; or \t
+      let firstLine = text.split(/\r\n|\n|\r/)[0] || '';
+      let commaCount = (firstLine.match(/,/g) || []).length;
+      let semiCount = (firstLine.match(/;/g) || []).length;
+      let tabCount = (firstLine.match(/\t/g) || []).length;
+      let delimiter = ',';
+      if (semiCount > commaCount && semiCount >= tabCount) delimiter = ';';
+      else if (tabCount > commaCount && tabCount > semiCount) delimiter = '\t';
+
+      let rows = [];
+      let currentRow = [];
+      let currentField = '';
+      let insideQuotes = false;
+      let i = 0;
+      let len = text.length;
+
+      while (i < len) {
+        let char = text[i];
+        let nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (insideQuotes && nextChar === '"') {
+            currentField += '"';
+            i += 2;
+            continue;
+          } else {
+            insideQuotes = !insideQuotes;
+            i++;
+            continue;
+          }
+        }
+
+        if (!insideQuotes && char === delimiter) {
+          currentRow.push(currentField);
+          currentField = '';
+          i++;
+          continue;
+        }
+
+        if (!insideQuotes && (char === '\r' || char === '\n')) {
+          if (char === '\r' && nextChar === '\n') i++;
+          currentRow.push(currentField);
+          currentField = '';
+          if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0].trim() !== '')) {
+            rows.push(currentRow);
+          }
+          currentRow = [];
+          i++;
+          continue;
+        }
+
+        currentField += char;
+        i++;
+      }
+
+      if (currentField.length > 0 || currentRow.length > 0) {
+        currentRow.push(currentField);
+        if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0].trim() !== '')) {
+          rows.push(currentRow);
+        }
+      }
+
+      if (rows.length < 2) return [];
+
+      let headers = rows[0].map(h => h.trim().replace(/^"|"$/g, ''));
+      let result = [];
+      for (let r = 1; r < rows.length; r++) {
+        let rowObj = {};
+        let row = rows[r];
+        for (let c = 0; c < headers.length; c++) {
+          rowObj[headers[c]] = row[c] !== undefined ? row[c].trim() : '';
+        }
+        result.push(rowObj);
+      }
+      return result;
+    }
+
+    /* Currency parsing supporting CAD, French formats, spaces, negative values */
+    function parseAmount(val) {
+      if (val === null || val === undefined) return 0;
+      if (typeof val === 'number') return isNaN(val) ? 0 : val;
+      let s = String(val).trim();
+      if (!s) return 0;
+      let isNegative = s.startsWith('-') || (s.startsWith('(') && s.endsWith(')'));
+      s = s.replace(/[^0-9.,]/g, '');
+      if (!s) return 0;
+      if (s.includes(',') && s.includes('.')) {
+        if (s.lastIndexOf(',') > s.lastIndexOf('.')) {
+          s = s.replace(/\./g, '').replace(',', '.');
+        } else {
+          s = s.replace(/,/g, '');
+        }
+      } else if (s.includes(',')) {
+        let parts = s.split(',');
+        if (parts.length === 2 && parts[1].length <= 2) {
+          s = s.replace(',', '.');
+        } else {
+          s = s.replace(/,/g, '');
+        }
+      }
+      let num = parseFloat(s);
+      return isNaN(num) ? 0 : (isNegative ? -num : num);
+    }
+
+    function extractField(row, regexList) {
+      if (!row) return '';
+      let keys = Object.keys(row);
+      for (let regex of regexList) {
+        let key = keys.find(k => regex.test(k));
+        if (key && row[key] !== undefined && row[key] !== null) {
+          let v = String(row[key]).trim();
+          if (v) return v;
+        }
+      }
+      return '';
+    }
+
+    function extractAmount(row, regexList) {
+      let raw = extractField(row, regexList);
+      return parseAmount(raw);
+    }
+
+    function parseGiftDate(dateStr) {
+      if (!dateStr) return null;
+      let s = String(dateStr).trim();
+      // Try standard Date parsing
+      let d = new Date(s);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020 && d.getFullYear() <= 2030) {
+        return { year: String(d.getFullYear()), month: d.getMonth() + 1 };
+      }
+      // Try DD/MM/YYYY or DD-MM-YYYY
+      let m = s.match(/^(\d{1,2})[\/\.-](\d{1,2})[\/\.-](\d{2,4})/);
+      if (m) {
+        let day = parseInt(m[1], 10);
+        let month = parseInt(m[2], 10);
+        let yr = parseInt(m[3], 10);
+        if (yr < 100) yr += 2000;
+        if (month >= 1 && month <= 12) {
+          return { year: String(yr), month: month };
+        }
+      }
+      // Try YYYY-MM-DD
+      let m2 = s.match(/^(\d{4})[\/\.-](\d{1,2})[\/\.-](\d{1,2})/);
+      if (m2) {
+        let yr = parseInt(m2[1], 10);
+        let month = parseInt(m2[2], 10);
+        if (month >= 1 && month <= 12) {
+          return { year: String(yr), month: month };
+        }
+      }
+      return null;
+    }
+
+    function splitFullName(name) {
+      if (!name) return { firstName: '', lastName: '' };
+      let s = String(name).trim();
+      if (s.includes(',')) {
+        let parts = s.split(',').map(p => p.trim());
+        return { firstName: parts[1] || '', lastName: parts[0] || '' };
+      }
+      let parts = s.split(/\s+/);
+      if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+      return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
+    }
+
+    function isPlaceholderName(first, last, full) {
+      let combined = `${first || ''} ${last || ''} ${full || ''}`.trim().toLowerCase();
+      if (!combined) return true;
+      return /^(team|équipe|equipe|general|général|none|aucun|anonyme|anonymous|donateur|donor|n\/a|marcheur solo|solo)$/i.test(combined);
+    }
+
+    /* Auto-detect file type based on headers or filename */
+    function detectCSVType(fileName, rows) {
+      let fn = fileName.toLowerCase();
+      if (fn.includes('gift') || fn.includes('don')) return 'gifts';
+      if (fn.includes('participant') || fn.includes('registration') || fn.includes('inscription')) return 'participants';
+      if (fn.includes('team') || fn.includes('équipe') || fn.includes('equipe')) return 'teams';
+
+      if (rows && rows.length > 0) {
+        let first = rows[0];
+        let keys = Object.keys(first).join(' ').toLowerCase();
+        if (keys.includes('gift amount') || keys.includes('montant du don') || keys.includes('gift date') || keys.includes('payment method')) return 'gifts';
+        if (keys.includes('registration status') || keys.includes('participation type') || keys.includes('participant id')) return 'participants';
+        if (keys.includes('team captain') || keys.includes('capitaine') || keys.includes('team id')) return 'teams';
+      }
+      return null;
+    }
+
+    /* ==========================================================================
+       5. DATA RECONCILIATION ENGINE (Fixes the contributor & amount issues)
+       ========================================================================== */
+    function reconcileCampaignData(rawFiles, existingData) {
+      const result = JSON.parse(JSON.stringify(existingData || REFERENCE_DATA));
+      const parsedGifts = rawFiles.gifts || null;
+      const parsedParticipants = rawFiles.participants || null;
+      const parsedTeams = rawFiles.teams || null;
+
+      let participantsMap = new Map(); // id / normalizedName -> participant obj
+      let participantList = [];
+      let teamMembersCount = new Map(); // teamNorm -> count
+      let teamCaptainsMap = new Map(); // teamNorm -> captainName
+
+      // 1. Process Participant Registration Report
+      if (parsedParticipants && parsedParticipants.length > 0) {
+        parsedParticipants.forEach(row => {
+          let fName = extractField(row, [/^first\s*name$/i, /^pr[eé]nom$/i, /participant\s*first/i, /pr[eé]nom\s*participant/i]);
+          let lName = extractField(row, [/^last\s*name$/i, /^nom$/i, /participant\s*last/i, /nom\s*participant/i, /nom\s*de\s*famille/i]);
+          let fullName = extractField(row, [/^name$/i, /^nom\s*complet$/i, /participant\s*name/i, /nom\s*du\s*participant/i]);
+          let consId = extractField(row, [/participant\s*(constituent\s*|cons\s*)?id/i, /constituent\s*id/i, /^cons\s*id$/i, /^id$/i]);
+          let teamName = extractField(row, [/team\s*name/i, /nom\s*(de\s*l['’])?équipe/i, /^team$/i, /^équipe$/i]);
+          let teamId = extractField(row, [/team\s*id/i, /id\s*équipe/i]);
+          
+          let isCapCol = extractField(row, [/is\s*(team\s*)?captain/i, /^capitaine$/i, /^chef$/i]);
+          let isCaptain = /^(true|yes|oui|1)$/i.test(isCapCol) || /captain|capitaine|chef/i.test(isCapCol);
+
+          let amountRaised = extractAmount(row, [
+            /total\s*of\s*all\s*not-rejected\s*gifts/i,
+            /total\s*online\s*donations/i,
+            /self-donation/i,
+            /total\s*(confirmed\s*)?raised/i,
+            /amount\s*raised/i,
+            /montant\s*(recueilli|amass[eé])/i,
+            /somme\s*(recueillie|amass[eé]e)/i,
+            /total\s*des\s*dons/i
+          ]);
+
+          if (!fName && !lName && fullName) {
+            let p = splitFullName(fullName);
+            fName = p.firstName;
+            lName = p.lastName;
+          }
+          if (!fName && !lName) return;
+
+          let isSolo = !teamName || /solo|individuel|individual|aucun|none|sans\s*équipe/i.test(teamName);
+          let cleanTeam = isSolo ? 'Marcheur solo' : teamName.trim();
+
+          let pObj = {
+            id: consId ? String(consId).trim() : null,
+            firstName: formatName(fName),
+            lastName: formatName(lName),
+            team: cleanTeam,
+            teamId: teamId ? String(teamId).trim() : null,
+            isCaptain: isCaptain,
+            totalAmount: amountRaised > 0 ? Math.round(amountRaised) : 0,
+            donorCount: amountRaised > 0 ? 1 : 0,
+            fromRegistration: true
+          };
+
+          participantList.push(pObj);
+          if (pObj.id) participantsMap.set('id_' + pObj.id, pObj);
+          let k1 = normalizeText(pObj.firstName) + '_' + normalizeText(pObj.lastName);
+          let k2 = normalizeText(pObj.lastName) + '_' + normalizeText(pObj.firstName);
+          participantsMap.set(k1, pObj);
+          participantsMap.set(k2, pObj);
+
+          if (!isSolo) {
+            let tNorm = normalizeText(cleanTeam);
+            teamMembersCount.set(tNorm, (teamMembersCount.get(tNorm) || 0) + 1);
+            if (isCaptain && !teamCaptainsMap.has(tNorm)) {
+              teamCaptainsMap.set(tNorm, `${pObj.firstName} ${pObj.lastName}`);
+            }
+          }
+        });
+      } else {
+        // Keep previous participants if available
+        (result.topContributors || []).forEach(p => {
+          let pObj = { ...p, totalAmount: 0, donorCount: 0 };
+          participantList.push(pObj);
+          let k1 = normalizeText(pObj.firstName) + '_' + normalizeText(pObj.lastName);
+          let k2 = normalizeText(pObj.lastName) + '_' + normalizeText(pObj.firstName);
+          participantsMap.set(k1, pObj);
+          participantsMap.set(k2, pObj);
+          if (pObj.id) participantsMap.set('id_' + pObj.id, pObj);
+          if (pObj.team && pObj.team !== 'Marcheur solo') {
+            let tNorm = normalizeText(pObj.team);
+            teamMembersCount.set(tNorm, (teamMembersCount.get(tNorm) || 0) + 1);
+            if (pObj.isCaptain && !teamCaptainsMap.has(tNorm)) {
+              teamCaptainsMap.set(tNorm, `${pObj.firstName} ${pObj.lastName}`);
+            }
+          }
+        });
+      }
+
+      // 2. Process Gift Details Report
+      let monthlyDonations = new Map();
+      let teamDirectDonations = new Map(); // teamNorm -> amount
+      let generalDonations = 0;
+      let totalGiftsSum = 0;
+      let matchedCount = 0;
+      let teamGiftsCount = 0;
+      let generalGiftsCount = 0;
+      let latestGiftDate = null;
+
+      if (parsedGifts && parsedGifts.length > 0) {
+        // Reset amounts if we have full gift details to reconstruct accurately
+        participantList.forEach(p => { p.totalAmount = 0; p.donorCount = 0; });
+
+        parsedGifts.forEach(row => {
+          let amount = extractAmount(row, [/gift\s*amount/i, /transaction\s*amount/i, /amount/i, /montant/i, /somme/i]);
+          if (amount <= 0 || isNaN(amount)) return;
+          totalGiftsSum += amount;
+
+          // Track date
+          let dateStr = extractField(row, [/date/i]);
+          if (dateStr) {
+            let pd = parseGiftDate(dateStr);
+            if (pd) {
+              let mKey = `${pd.year}-${String(pd.month).padStart(2, '0')}`;
+              monthlyDonations.set(mKey, (monthlyDonations.get(mKey) || 0) + amount);
+              let candidateDate = new Date(`${pd.year}-${String(pd.month).padStart(2, '0')}-15`);
+              if (!latestGiftDate || candidateDate > latestGiftDate) {
+                latestGiftDate = candidateDate;
+              }
+            }
+          }
+
+          // Participant identity in gift
+          let pId = extractField(row, [
+            /participant\s*(constituent\s*|cons\s*)?id/i,
+            /credited\s*(constituent\s*|cons\s*)?id/i,
+            /donor\s*(constituent\s*|cons\s*)?id/i,
+            /constituent\s*id/i,
+            /id\s*participant/i
+          ]);
+          let pFirst = extractField(row, [
+            /participant\s*first/i,
+            /^first\s*name$/i,
+            /pr[eé]nom\s*(du\s*)?participant/i,
+            /^pr[eé]nom$/i,
+            /donor\s*first/i
+          ]);
+          let pLast = extractField(row, [
+            /participant\s*last/i,
+            /^last\s*name$/i,
+            /nom\s*(du\s*)?participant/i,
+            /^nom$/i,
+            /nom\s*de\s*famille/i,
+            /donor\s*last/i
+          ]);
+          let pFull = extractField(row, [
+            /participant\s*name/i,
+            /nom\s*complet\s*(du\s*)?participant/i,
+            /credited\s*to/i,
+            /attribu[eé]\s*à/i
+          ]);
+          let gTeam = extractField(row, [
+            /team\s*name/i,
+            /nom\s*(de\s*l['’])?équipe/i,
+            /^team$/i,
+            /^équipe$/i
+          ]);
+
+          if (!pFirst && !pLast && pFull) {
+            let p = splitFullName(pFull);
+            pFirst = p.firstName;
+            pLast = p.lastName;
+          }
+
+          let isPlaceholder = isPlaceholderName(pFirst, pLast, pFull);
+          let matched = null;
+
+          if (!isPlaceholder) {
+            if (pId && participantsMap.has('id_' + String(pId).trim())) {
+              matched = participantsMap.get('id_' + String(pId).trim());
+            } else if (pFirst || pLast) {
+              let k1 = normalizeText(pFirst) + '_' + normalizeText(pLast);
+              let k2 = normalizeText(pLast) + '_' + normalizeText(pFirst);
+              matched = participantsMap.get(k1) || participantsMap.get(k2);
+            }
+          }
+
+          if (matched) {
+            matchedCount++;
+            matched.totalAmount = (matched.totalAmount || 0) + amount;
+            matched.donorCount = (matched.donorCount || 0) + 1;
+            if (gTeam && !gTeam.toLowerCase().includes('solo') && (!matched.team || matched.team === 'Marcheur solo')) {
+              matched.team = gTeam.trim();
+            }
+          } else if (!isPlaceholder && (pFirst || pLast)) {
+            // New participant identified from gifts
+            matchedCount++;
+            let isSolo = !gTeam || /solo|individuel|individual|aucun|none/i.test(gTeam);
+            let newP = {
+              id: pId ? String(pId).trim() : null,
+              firstName: formatName(pFirst),
+              lastName: formatName(pLast),
+              team: isSolo ? 'Marcheur solo' : gTeam.trim(),
+              teamId: null,
+              isCaptain: false,
+              totalAmount: amount,
+              donorCount: 1,
+              fromRegistration: false
+            };
+            participantList.push(newP);
+            if (newP.id) participantsMap.set('id_' + newP.id, newP);
+            let k1 = normalizeText(newP.firstName) + '_' + normalizeText(newP.lastName);
+            let k2 = normalizeText(newP.lastName) + '_' + normalizeText(newP.firstName);
+            participantsMap.set(k1, newP);
+            participantsMap.set(k2, newP);
+            if (!isSolo) {
+              let tNorm = normalizeText(newP.team);
+              teamMembersCount.set(tNorm, (teamMembersCount.get(tNorm) || 0) + 1);
+            }
+          } else if (gTeam && !/solo|individuel|individual|aucun|none/i.test(gTeam)) {
+            // Direct Team Donation
+            teamGiftsCount++;
+            let tNorm = normalizeText(gTeam);
+            teamDirectDonations.set(tNorm, (teamDirectDonations.get(tNorm) || 0) + amount);
+          } else {
+            // General donation
+            generalGiftsCount++;
+            generalDonations += amount;
+          }
+        });
+      }
+
+      // 3. Process Team Performance Report
+      let allTeamsList = [];
+      let teamsMap = new Map();
+
+      if (parsedTeams && parsedTeams.length > 0) {
+        parsedTeams.forEach(row => {
+          let tName = extractField(row, [/team\s*name/i, /nom\s*(de\s*l['’])?équipe/i, /^team$/i, /^équipe$/i]);
+          let tId = extractField(row, [/team\s*id/i, /id\s*équipe/i]);
+
+          let capFirst = extractField(row, [/captain\s*first/i, /pr[eé]nom\s*(du\s*)?capitaine/i]);
+          let capLast = extractField(row, [/captain\s*last/i, /nom\s*(du\s*)?capitaine/i]);
+          let capFull = extractField(row, [/captain\s*name/i, /^captain$/i, /^capitaine$/i, /^chef$/i]);
+          let captain = (capFirst || capLast) ? `${formatName(capFirst)} ${formatName(capLast)}`.trim() : (capFull ? formatName(capFull) : '');
+
+          let members = extractField(row, [
+            /^#\s*of\s*participants$/i,
+            /number\s*of\s*participants/i,
+            /nb\s*(de\s*)?participants/i,
+            /nombre\s*(de\s*)?participants/i,
+            /^#\s*participants$/i,
+            /^participants$/i,
+            /members?/i,
+            /membres?/i,
+            /effectif/i
+          ]);
+
+          let teamGoal = extractAmount(row, [
+            /^team\s*goal/i,
+            /objectif\s*(de\s*l['’])?équipe/i,
+            /cible\s*(de\s*l['’])?équipe/i
+          ]);
+          let cumGoal = extractAmount(row, [
+            /participant\s*cumulative\s*goal/i,
+            /objectif\s*cumulatif/i
+          ]);
+          let effectiveGoal = teamGoal > 0 ? teamGoal : (cumGoal > 0 ? cumGoal : 0);
+
+          let amount = extractAmount(row, [
+            /total\s*of\s*all\s*not-rejected\s*gifts/i,
+            /total\s*online\s*donations/i,
+            /total\s*confirmed\s*gifts/i,
+            /total\s*raised/i,
+            /amount\s*raised/i,
+            /montant/i,
+            /somme/i
+          ]);
+
+          if (!tName) return;
+          if (/solo|individuel|individual/i.test(tName)) return;
+
+          let count = parseInt(members, 10);
+          let tNorm = normalizeText(tName);
+          let actualMembers = teamMembersCount.get(tNorm) || 0;
+          let finalCount = (!isNaN(count) && count > 0) ? count : (actualMembers || 1);
+
+          let tObj = {
+            id: tId ? String(tId).trim() : null,
+            name: tName.trim(),
+            participants: finalCount,
+            amount: Math.round(amount || 0),
+            goal: Math.round(effectiveGoal || 0),
+            teamGoal: Math.round(teamGoal || 0),
+            cumulativeGoal: Math.round(cumGoal || 0),
+            captain: captain || (teamCaptainsMap.get(tNorm) || ''),
+            directDonations: 0
+          };
+          teamsMap.set(tNorm, tObj);
+          allTeamsList.push(tObj);
+        });
+      } else {
+        // Synthesize teams from participants
+        let synTeams = new Map();
+        participantList.forEach(p => {
+          if (p.team && p.team !== 'Marcheur solo') {
+            let tNorm = normalizeText(p.team);
+            if (!synTeams.has(tNorm)) {
+              synTeams.set(tNorm, {
+                id: p.teamId,
+                name: p.team,
+                participants: 0,
+                amount: 0,
+                goal: 0,
+                teamGoal: 0,
+                cumulativeGoal: 0,
+                captain: p.isCaptain ? `${p.firstName} ${p.lastName}` : (teamCaptainsMap.get(tNorm) || ''),
+                directDonations: 0
+              });
+            }
+            let t = synTeams.get(tNorm);
+            t.participants++;
+            t.amount += p.totalAmount;
+          }
+        });
+        allTeamsList = Array.from(synTeams.values());
+        allTeamsList.forEach(t => teamsMap.set(normalizeText(t.name), t));
+      }
+
+      // 4. Reconcile Team Amounts with Individual Member Totals
+      allTeamsList.forEach(team => {
+        let tNorm = normalizeText(team.name);
+        let membersSum = participantList
+          .filter(p => normalizeText(p.team) === tNorm)
+          .reduce((sum, p) => sum + (p.totalAmount || 0), 0);
+        let directGifts = teamDirectDonations.get(tNorm) || 0;
+
+        let calculatedTotal = Math.round(membersSum + directGifts);
+        if (calculatedTotal > team.amount) {
+          team.amount = calculatedTotal;
+        }
+        team.directDonations = Math.max(0, Math.round(team.amount - membersSum));
+      });
+
+      // 5. Final Campaign Metrics Calculation
+      let teamsTotal = allTeamsList.reduce((acc, t) => acc + (t.amount || 0), 0);
+      let soloTotal = participantList
+        .filter(p => p.team === 'Marcheur solo')
+        .reduce((acc, p) => acc + (p.totalAmount || 0), 0);
+      let calculatedCampaignTotal = Math.round(teamsTotal + soloTotal + generalDonations);
+
+      if (totalGiftsSum > calculatedCampaignTotal) {
+        calculatedCampaignTotal = Math.round(totalGiftsSum);
+      }
+
+      // Sort contributors descending
+      participantList.sort((a, b) => b.totalAmount - a.totalAmount);
+      // Sort teams descending
+      allTeamsList.sort((a, b) => b.amount - a.amount);
+
+      // Monthly Progress reconciliation
+      const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+      let finalMonthlyProgress = [];
+      if (monthlyDonations.size > 0) {
+        let sortedMonthKeys = Array.from(monthlyDonations.keys()).sort();
+        sortedMonthKeys.forEach(key => {
+          let [yr, mo] = key.split('-');
+          let mIndex = parseInt(mo, 10) - 1;
+          finalMonthlyProgress.push({
+            label: monthNames[mIndex] || mo,
+            year: yr,
+            amount: Math.round(monthlyDonations.get(key))
+          });
+        });
+      } else {
+        finalMonthlyProgress = result.monthlyProgress || REFERENCE_DATA.monthlyProgress;
+      }
+
+      let soloCount = participantList.filter(p => p.team === 'Marcheur solo').length;
+      let participantsCount = participantList.length > 0 ? participantList.length : result.kpis.participants;
+
+      // Update result object
+      result.kpis.totalDonations = calculatedCampaignTotal > 0 ? calculatedCampaignTotal : result.kpis.totalDonations;
+      result.kpis.participants = participantsCount;
+      result.kpis.teams = allTeamsList.length;
+      result.kpis.solo = soloCount > 0 ? soloCount : 1;
+      result.topContributors = participantList;
+      result.allTeams = allTeamsList;
+      result.topTeams = allTeamsList.slice(0, 10);
+      result.monthlyProgress = finalMonthlyProgress;
+
+      if (latestGiftDate) {
+        result.lastUpdated = latestGiftDate.toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      result.diagnostics = {
+        totalGiftsCount: parsedGifts ? parsedGifts.length : 0,
+        matchedGiftsCount: matchedCount,
+        teamGiftsCount: teamGiftsCount,
+        generalGiftsCount: generalGiftsCount,
+        totalGiftsAmount: Math.round(totalGiftsSum),
+        totalTeamsAmount: teamsTotal,
+        reconciliationMessage: `${matchedCount} dons attribués à ${participantList.length} marcheurs, ${teamGiftsCount} dons directs d'équipe, ${allTeamsList.length} équipes actives.`
+      };
+
+      return result;
+    }
+
+    /* ==========================================================================
+       6. UI RENDERING & CHARTS
+       ========================================================================== */
+    function renderApp() {
+      if (!appState) return;
+
+      // Header update
+      document.getElementById('header-last-updated').textContent = appState.lastUpdated || '13 avril 2027';
+
+      // KPI Gauges & Counters
+      let partPct = appState.targets.participants > 0 ? Math.round((appState.kpis.participants / appState.targets.participants) * 100) : 0;
+      document.getElementById('kpi-participants-pct').textContent = `${partPct}%`;
+      document.getElementById('kpi-participants-target-label').textContent = `Cible: ${appState.targets.participants}`;
+      renderSemiGauge('gauge-participants-container', appState.kpis.participants, appState.targets.participants, 115, 11, '#0084FF', '#E2E8F0', formatNumber(appState.kpis.participants));
+
+      let teamsPct = appState.targets.teams > 0 ? Math.round((appState.kpis.teams / appState.targets.teams) * 100) : 0;
+      document.getElementById('kpi-teams-pct').textContent = `${teamsPct}%`;
+      document.getElementById('kpi-teams-target-label').textContent = `Cible: ${appState.targets.teams}`;
+      renderSemiGauge('gauge-teams-container', appState.kpis.teams, appState.targets.teams, 115, 11, '#00509D', '#E2E8F0', formatNumber(appState.kpis.teams));
+
+      document.getElementById('kpi-solo-count').textContent = formatNumber(appState.kpis.solo);
+      let soloPctOfTotal = appState.kpis.participants > 0 ? Math.round((appState.kpis.solo / appState.kpis.participants) * 100) : 0;
+      document.getElementById('kpi-solo-pct').textContent = `${soloPctOfTotal}% du total`;
+
+      let goalPct = appState.targets.amountGoal > 0 ? (appState.kpis.totalDonations / appState.targets.amountGoal * 100) : 0;
+      document.getElementById('kpi-goal-badge').textContent = `Objectif ${formatNumber(appState.targets.amountGoal)} $`;
+      document.getElementById('kpi-goal-pct').textContent = `${goalPct.toFixed(1).replace('.', ',')} %`;
+
+      document.getElementById('kpi-total-formatted').textContent = formatCurrencyK(appState.kpis.totalDonations);
+      document.getElementById('kpi-total-exact').textContent = `${formatNumber(appState.kpis.totalDonations)} $ CAD`;
+
+      // Overall Campaign Gauge
+      document.getElementById('goal-gauge-pct-badge').textContent = `${goalPct.toFixed(1).replace('.', ',')} %`;
+      document.getElementById('goal-gauge-amount-big').textContent = formatCurrencyK(appState.kpis.totalDonations);
+      document.getElementById('goal-gauge-target-label').textContent = formatCurrencyExact(appState.targets.amountGoal);
+      document.getElementById('goal-gauge-target-max').textContent = formatCurrencyK(appState.targets.amountGoal);
+      let remaining = Math.max(0, appState.targets.amountGoal - appState.kpis.totalDonations);
+      document.getElementById('goal-gauge-remaining').textContent = formatCurrencyExact(remaining);
+      renderCampaignGoalGauge('goal-gauge-svg-container', appState.kpis.totalDonations, appState.targets.amountGoal);
+
+      // Top Contributors & Teams tables
+      renderTopContributorsTable();
+      renderTopTeamsTable();
+
+      // Monthly Chart
+      renderMonthlyChart();
+
+      // Detailed View tables
+      renderDetailedView();
+    }
+
+    function renderSemiGauge(containerId, value, max, size, strokeWidth, color, bgColor, label) {
+      let container = document.getElementById(containerId);
+      if (!container) return;
+      let ratio = max > 0 ? Math.min(Math.max(value, 0), max) / max : 0;
+      let r = (size - strokeWidth) / 2;
+      let circumference = Math.PI * r;
+      let offset = circumference * (1 - ratio);
+
+      container.innerHTML = `
+        <div style="position: relative; width: ${size}px; height: ${size / 2 + 15}px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+          <svg width="${size}" height="${size / 2 + strokeWidth}" viewBox="0 0 ${size} ${size / 2 + strokeWidth}" style="overflow: visible;">
+            <path d="M ${strokeWidth / 2} ${size / 2} A ${r} ${r} 0 0 1 ${size - strokeWidth / 2} ${size / 2}" fill="none" stroke="${bgColor}" stroke-width="${strokeWidth}" stroke-linecap="round" />
+            <path d="M ${strokeWidth / 2} ${size / 2} A ${r} ${r} 0 0 1 ${size - strokeWidth / 2} ${size / 2}" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" style="transition: stroke-dashoffset 0.8s ease-out;" />
+          </svg>
+          <div style="position: absolute; bottom: 0; display: flex; flex-direction: column; align-items: center;">
+            <span class="tabular-nums" style="font-size: 1.15rem; font-weight: 800; color: var(--slate-800); line-height: 1;">${label}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCampaignGoalGauge(containerId, current, target) {
+      let container = document.getElementById(containerId);
+      if (!container) return;
+      let ratio = target > 0 ? Math.min(Math.max(current, 0), target) / target : 0;
+      let size = 280;
+      let strokeWidth = 22;
+      let r = 129;
+      let circumference = Math.PI * r;
+      let offset = circumference * (1 - ratio);
+
+      let dots = [0.25, 0.5, 0.75].map(pct => {
+        let angle = Math.PI * (1 - pct);
+        let cx = 140 + 131 * Math.cos(angle);
+        let cy = 140 - 131 * Math.sin(angle);
+        return `<circle cx="${cx}" cy="${cy}" r="3.5" fill="#94A3B8" />`;
+      }).join('');
+
+      container.innerHTML = `
+        <svg width="280" height="165" viewBox="0 0 280 165" style="overflow: visible;">
+          <defs>
+            <linearGradient id="campaignGoalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00509D" />
+              <stop offset="65%" stop-color="#0084FF" />
+              <stop offset="100%" stop-color="#FFDE00" />
+            </linearGradient>
+          </defs>
+          <path d="M 11 140 A 129 129 0 0 1 269 140" fill="none" stroke="#F1F5F9" stroke-width="${strokeWidth}" stroke-linecap="round" />
+          <path d="M 11 140 A 129 129 0 0 1 269 140" fill="none" stroke="url(#campaignGoalGradient)" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" style="transition: stroke-dashoffset 1s ease-out;" />
+          ${dots}
+        </svg>
+      `;
+    }
+
+    function renderTopContributorsTable() {
+      let tbody = document.getElementById('top-contributors-tbody');
+      if (!tbody) return;
+      let top10 = (appState.topContributors || []).slice(0, 10);
+      document.getElementById('top-contrib-count-badge').textContent = `${appState.topContributors.length} marcheurs`;
+      let sumTop10 = top10.reduce((acc, c) => acc + (c.totalAmount || 0), 0);
+      document.getElementById('top-contrib-sum').textContent = `Total : ${formatCurrencyExact(sumTop10)}`;
+
+      if (top10.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--slate-400); padding: 1.5rem;">Aucun contributeur enregistré.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = top10.map((c, idx) => {
+        let rank = idx + 1;
+        let rankBadge = rank === 1 ? `<span class="rank-badge rank-1">1</span>` :
+                        rank === 2 ? `<span class="rank-badge rank-2">2</span>` :
+                        rank === 3 ? `<span class="rank-badge rank-3">3</span>` : rank;
+        return `
+          <tr data-team="${escapeHtml(c.team)}" onclick="handleContributorClickByElement(this)" style="cursor: pointer;" title="Cliquer pour afficher l'équipe">
+            <td style="text-align: center; font-weight: 700; color: var(--slate-400);">${rankBadge}</td>
+            <td style="font-weight: 700; color: var(--slate-900);">
+              ${escapeHtml(c.lastName || '—')}
+              ${c.isCaptain ? `<span style="margin-left: 0.25rem; font-size: 0.6rem; background: var(--blue-100); color: var(--blue-800); padding: 0.1rem 0.3rem; border-radius: 0.2rem; font-weight: 700;">Cap.</span>` : ''}
+            </td>
+            <td style="color: var(--slate-700); font-weight: 500;">${escapeHtml(c.firstName || '—')}</td>
+            <td class="tabular-nums" style="text-align: right; font-weight: 800; color: ${c.totalAmount > 0 ? 'var(--blue-700)' : 'var(--slate-400)'};">
+              ${formatCurrencyExact(c.totalAmount)}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderTopTeamsTable() {
+      let tbody = document.getElementById('top-teams-tbody');
+      if (!tbody) return;
+      let top10 = (appState.allTeams || []).slice(0, 10);
+      document.getElementById('top-teams-count-badge').textContent = `${appState.allTeams.length} équipes`;
+      let sumTop10 = top10.reduce((acc, t) => acc + (t.amount || 0), 0);
+      document.getElementById('top-teams-sum').textContent = `Total : ${formatCurrencyExact(sumTop10)}`;
+
+      if (top10.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--slate-400); padding: 1.5rem;">Aucune équipe enregistrée.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = top10.map((t, idx) => {
+        let rank = idx + 1;
+        let rankBadge = rank === 1 ? `<span class="rank-badge rank-1">1</span>` :
+                        rank === 2 ? `<span class="rank-badge rank-2">2</span>` :
+                        rank === 3 ? `<span class="rank-badge rank-3">3</span>` : rank;
+        return `
+          <tr data-team="${escapeHtml(t.name)}" onclick="openTeamModalByElement(this)" style="cursor: pointer;" title="Cliquer pour afficher la composition">
+            <td style="text-align: center; font-weight: 700; color: var(--slate-400);">${rankBadge}</td>
+            <td style="font-weight: 700; color: var(--slate-900);">
+              <div style="max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.name)}</div>
+            </td>
+            <td class="tabular-nums" style="text-align: center; font-weight: 700; color: var(--slate-700);">
+              <span style="display: inline-flex; align-items: center; gap: 0.2rem; background: var(--slate-100); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.7rem;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                ${t.participants || 1}
+              </span>
+            </td>
+            <td class="tabular-nums" style="text-align: right; font-weight: 900; color: var(--blue-700);">
+              ${formatCurrencyExact(t.amount)}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderMonthlyChart() {
+      let gridContainer = document.getElementById('chart-grid-lines');
+      let barsContainer = document.getElementById('chart-bars-container');
+      if (!gridContainer || !barsContainer) return;
+
+      let rawData = appState.monthlyProgress || [];
+      let running = 0;
+      let displayData = rawData.map(item => {
+        running += item.amount;
+        return {
+          ...item,
+          cumulative: running,
+          displayVal: chartMode === 'monthly' ? item.amount : running
+        };
+      });
+
+      let maxVal = Math.max(...displayData.map(d => d.displayVal), chartMode === 'cumulative' ? (appState.targets.amountGoal * 0.25) : 12000);
+      let avgVal = displayData.length > 0 ? (displayData.reduce((acc, d) => acc + d.amount, 0) / displayData.length) : 0;
+      document.getElementById('chart-avg-monthly').textContent = formatCurrencyExact(avgVal);
+
+      // Grid lines
+      gridContainer.innerHTML = `
+        <div style="border-bottom: 1px dashed var(--slate-200); width: 100%; display: flex; justify-content: flex-end;">
+          <span class="font-mono" style="font-size: 0.65rem; color: var(--slate-400); padding-right: 0.5rem; margin-top: -0.6rem;">${formatCurrencyK(maxVal)}</span>
+        </div>
+        <div style="border-bottom: 1px dashed var(--slate-200); width: 100%; display: flex; justify-content: flex-end;">
+          <span class="font-mono" style="font-size: 0.65rem; color: var(--slate-400); padding-right: 0.5rem; margin-top: -0.6rem;">${formatCurrencyK(maxVal * 0.5)}</span>
+        </div>
+        <div style="border-bottom: 1px solid var(--slate-200); width: 100%; display: flex; justify-content: flex-end;">
+          <span class="font-mono" style="font-size: 0.65rem; color: var(--slate-400); padding-right: 0.5rem; margin-top: -0.6rem;">$0K</span>
+        </div>
+      `;
+
+      // Legend update
+      document.getElementById('chart-legend-color').style.background = chartMode === 'monthly' ? 'var(--blue-600)' : 'var(--blue-800)';
+      document.getElementById('chart-legend-text').textContent = chartMode === 'monthly' ? 'Dons reçus durant le mois' : 'Somme totale cumulée';
+
+      // Bars
+      barsContainer.innerHTML = displayData.map(item => {
+        let heightPct = maxVal > 0 ? Math.max((item.displayVal / maxVal) * 100, 4) : 4;
+        let barColor = chartMode === 'monthly' ? '#0084FF' : '#00509D';
+        return `
+          <div style="flex: 1; max-width: 80px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; cursor: pointer; transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'">
+            <span class="tabular-nums" style="font-size: 0.7rem; font-weight: 800; color: var(--slate-800); margin-bottom: 0.35rem;">
+              ${formatCurrencyK(item.displayVal)}
+            </span>
+            <div style="width: 100%; height: ${heightPct}%; background: ${barColor}; border-top-left-radius: 4px; border-top-right-radius: 4px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
+              <div style="width: 100%; height: 3px; background: var(--yellow-400); border-top-left-radius: 4px; border-top-right-radius: 4px;"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; margin-top: 0.45rem;">
+              <span style="font-size: 0.72rem; font-weight: 700; color: var(--slate-800); text-transform: capitalize; line-height: 1;">${escapeHtml(item.label)}</span>
+              <span style="font-size: 0.65rem; color: var(--slate-500); font-weight: 500;">${escapeHtml(item.year)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDetailedView() {
+      // 1. Filtered Contributors
+      let q = searchQuery.toLowerCase().trim();
+      let filteredContribs = (appState.topContributors || []).filter(c => {
+        if (detailsFilter === 'solo' && !c.team.toLowerCase().includes('solo')) return false;
+        if (detailsFilter === 'teams' && c.team.toLowerCase().includes('solo')) return false;
+        if (detailsFilter === 'with_donations' && c.totalAmount <= 0) return false;
+        if (q) {
+          let hay = `${c.firstName} ${c.lastName} ${c.team}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      // Sort contributors
+      filteredContribs.sort((a, b) => {
+        if (sortContribField === 'name') {
+          let nA = `${a.lastName} ${a.firstName}`.toLowerCase();
+          let nB = `${b.lastName} ${b.firstName}`.toLowerCase();
+          return sortContribDir === 'asc' ? nA.localeCompare(nB) : nB.localeCompare(nA);
+        }
+        return sortContribDir === 'asc' ? a.totalAmount - b.totalAmount : b.totalAmount - a.totalAmount;
+      });
+
+      document.getElementById('all-contributors-count').textContent = `${filteredContribs.length} enregistrements trouvés`;
+      document.getElementById('all-contrib-footer-count').textContent = `${filteredContribs.length} contributeurs`;
+      let sumContribs = filteredContribs.reduce((acc, c) => acc + (c.totalAmount || 0), 0);
+      document.getElementById('all-contrib-footer-sum').textContent = `Total : ${formatCurrencyExact(sumContribs)}`;
+
+      let tbodyContribs = document.getElementById('all-contributors-tbody');
+      if (filteredContribs.length === 0) {
+        tbodyContribs.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--slate-400); padding: 2rem;">Aucun contributeur ne correspond aux filtres.</td></tr>`;
+      } else {
+        tbodyContribs.innerHTML = filteredContribs.map((c, idx) => `
+          <tr data-team="${escapeHtml(c.team)}" onclick="handleContributorClickByElement(this)" style="cursor: pointer;" title="Cliquer pour afficher l'équipe">
+            <td style="text-align: center; font-weight: 700; color: var(--slate-400);">${idx + 1}</td>
+            <td style="font-weight: 700; color: var(--slate-900);">
+              ${escapeHtml(c.lastName || '—')}
+              ${c.isCaptain ? `<span style="margin-left: 0.25rem; font-size: 0.6rem; background: var(--blue-100); color: var(--blue-800); padding: 0.1rem 0.3rem; border-radius: 0.2rem; font-weight: 700;">Cap.</span>` : ''}
+            </td>
+            <td style="color: var(--slate-700); font-weight: 500;">${escapeHtml(c.firstName || '—')}</td>
+            <td style="color: var(--slate-600);"><span style="max-width: 130px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(c.team || '—')}</span></td>
+            <td class="tabular-nums" style="text-align: right; font-weight: 800; color: ${c.totalAmount > 0 ? 'var(--blue-700)' : 'var(--slate-400)'};">
+              ${formatCurrencyExact(c.totalAmount)}
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 2. Filtered Teams
+      let filteredTeams = (appState.allTeams || []).filter(t => {
+        if (detailsFilter === 'solo' && !t.name.toLowerCase().includes('solo')) return false;
+        if (detailsFilter === 'teams' && t.name.toLowerCase().includes('solo')) return false;
+        if (detailsFilter === 'with_donations' && t.amount <= 0) return false;
+        if (q) {
+          let hay = `${t.name} ${t.captain || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      // Sort teams
+      filteredTeams.sort((a, b) => {
+        if (sortTeamField === 'name') {
+          return sortTeamDir === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        } else if (sortTeamField === 'participants') {
+          return sortTeamDir === 'asc' ? (a.participants || 0) - (b.participants || 0) : (b.participants || 0) - (a.participants || 0);
+        } else if (sortTeamField === 'goal') {
+          return sortTeamDir === 'asc' ? (a.goal || 0) - (b.goal || 0) : (b.goal || 0) - (a.goal || 0);
+        }
+        return sortTeamDir === 'asc' ? a.amount - b.amount : b.amount - a.amount;
+      });
+
+      document.getElementById('all-teams-count').textContent = `${filteredTeams.length} équipes inscrites`;
+      document.getElementById('all-teams-footer-count').textContent = `${filteredTeams.length} équipes`;
+      let sumTeams = filteredTeams.reduce((acc, t) => acc + (t.amount || 0), 0);
+      document.getElementById('all-teams-footer-sum').textContent = `Total : ${formatCurrencyExact(sumTeams)}`;
+
+      let tbodyTeams = document.getElementById('all-teams-tbody');
+      if (filteredTeams.length === 0) {
+        tbodyTeams.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--slate-400); padding: 2rem;">Aucune équipe ne correspond aux filtres.</td></tr>`;
+      } else {
+        tbodyTeams.innerHTML = filteredTeams.map((t, idx) => {
+          let goalStr = t.goal > 0 ? formatCurrencyExact(t.goal) : '—';
+          let pctGoalStr = t.goal > 0 ? ((t.amount / t.goal) * 100).toFixed(1).replace('.', ',') + ' %' : '—';
+          return `
+            <tr data-team="${escapeHtml(t.name)}" onclick="openTeamModalByElement(this)" style="cursor: pointer;" title="Cliquer pour afficher la composition">
+              <td style="text-align: center; font-weight: 700; color: var(--slate-400);">${idx + 1}</td>
+              <td style="font-weight: 700; color: var(--slate-900);">
+                <div style="max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.name)}</div>
+                ${t.captain ? `<div style="font-size: 0.65rem; color: var(--slate-400); font-weight: 500;">Capitaine : ${escapeHtml(t.captain)}</div>` : ''}
+              </td>
+              <td class="tabular-nums" style="text-align: center; font-weight: 700; color: var(--slate-700);">
+                <span style="display: inline-flex; align-items: center; gap: 0.2rem; background: var(--slate-100); padding: 0.15rem 0.45rem; border-radius: 0.25rem; font-size: 0.7rem;">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  ${t.participants || 1}
+                </span>
+              </td>
+              <td class="tabular-nums" style="text-align: right; color: var(--slate-600); font-weight: 600;">${goalStr}</td>
+              <td class="tabular-nums" style="text-align: right; color: ${t.goal > 0 && t.amount >= t.goal ? 'var(--emerald-600)' : 'var(--blue-700)'}; font-weight: 700;">
+                ${pctGoalStr}
+              </td>
+              <td class="tabular-nums" style="text-align: right; font-weight: 900; color: var(--blue-700);">
+                ${formatCurrencyExact(t.amount)}
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    /* ==========================================================================
+       7. INTERACTION HANDLERS & MODALS
+       ========================================================================== */
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('tab-btn-dashboard').classList.toggle('active', tab === 'dashboard');
+      document.getElementById('tab-btn-details').classList.toggle('active', tab === 'details');
+      document.getElementById('view-dashboard').style.display = tab === 'dashboard' ? 'flex' : 'none';
+      document.getElementById('view-details').style.display = tab === 'details' ? 'flex' : 'none';
+      if (tab === 'details') renderDetailedView();
+    }
+
+    function setChartMode(mode) {
+      chartMode = mode;
+      document.getElementById('chart-mode-monthly').classList.toggle('active', mode === 'monthly');
+      document.getElementById('chart-mode-cumulative').classList.toggle('active', mode === 'cumulative');
+      renderMonthlyChart();
+    }
+
+    function setDetailsFilter(filter) {
+      detailsFilter = filter;
+      ['all', 'teams', 'solo', 'donations'].forEach(f => {
+        let btn = document.getElementById(`filter-btn-${f}`);
+        if (btn) btn.classList.toggle('active', (filter === 'with_donations' && f === 'donations') || filter === f);
+      });
+      renderDetailedView();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      document.getElementById('details-search-clear').style.display = val ? 'block' : 'none';
+      renderDetailedView();
+    }
+
+    function clearSearch() {
+      searchQuery = '';
+      document.getElementById('details-search-input').value = '';
+      document.getElementById('details-search-clear').style.display = 'none';
+      renderDetailedView();
+    }
+
+    function toggleSortContributors(field) {
+      if (sortContribField === field) {
+        sortContribDir = sortContribDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortContribField = field;
+        sortContribDir = field === 'amount' ? 'desc' : 'asc';
+      }
+      document.getElementById('sort-icon-contrib-name').textContent = sortContribField === 'name' ? (sortContribDir === 'asc' ? '▲' : '▼') : '';
+      document.getElementById('sort-icon-contrib-amount').textContent = sortContribField === 'amount' ? (sortContribDir === 'asc' ? '▲' : '▼') : '';
+      renderDetailedView();
+    }
+
+    function toggleSortTeams(field) {
+      if (sortTeamField === field) {
+        sortTeamDir = sortTeamDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortTeamField = field;
+        sortTeamDir = (field === 'name' || field === 'participants') ? 'asc' : 'desc';
+      }
+      document.getElementById('sort-icon-team-name').textContent = sortTeamField === 'name' ? (sortTeamDir === 'asc' ? '▲' : '▼') : '';
+      let partEl = document.getElementById('sort-icon-team-participants');
+      if (partEl) partEl.textContent = sortTeamField === 'participants' ? (sortTeamDir === 'asc' ? '▲' : '▼') : '';
+      let goalEl = document.getElementById('sort-icon-team-goal');
+      if (goalEl) goalEl.textContent = sortTeamField === 'goal' ? (sortTeamDir === 'asc' ? '▲' : '▼') : '';
+      document.getElementById('sort-icon-team-amount').textContent = sortTeamField === 'amount' ? (sortTeamDir === 'asc' ? '▲' : '▼') : '';
+      renderDetailedView();
+    }
+
+    function handleContributorClick(teamName) {
+      if (teamName && !teamName.toLowerCase().includes('solo')) {
+        openTeamModal(teamName);
+      }
+    }
+
+    function openTeamModalByElement(el) {
+      if (!el) return;
+      let teamName = el.getAttribute('data-team');
+      if (teamName) openTeamModal(teamName);
+    }
+
+    function handleContributorClickByElement(el) {
+      if (!el) return;
+      let teamName = el.getAttribute('data-team');
+      if (teamName && !teamName.toLowerCase().includes('solo')) {
+        openTeamModal(teamName);
+      }
+    }
+
+    /* Modal: Team Details */
+    function openTeamModal(teamName) {
+      if (!teamName) return;
+      let team = (appState.allTeams || []).find(t => normalizeText(t.name) === normalizeText(teamName));
+      if (!team) {
+        team = { name: teamName, participants: 1, amount: 0, goal: 0, captain: '', directDonations: 0 };
+      }
+
+      let isSolo = team.name.toLowerCase().includes('solo');
+      let members = (appState.topContributors || []).filter(c => {
+        if (isSolo) return c.team.toLowerCase().includes('solo');
+        return normalizeText(c.team) === normalizeText(team.name);
+      });
+      members.sort((a, b) => b.totalAmount - a.totalAmount);
+
+      document.getElementById('modal-team-title').textContent = team.name;
+      document.getElementById('modal-team-sub').textContent = isSolo ? 'Marcheurs individuels autonomes' : (team.captain ? `Capitaine : ${team.captain}` : 'Équipe officielle');
+      document.getElementById('modal-team-kpi-members').textContent = members.length > 0 ? members.length : (team.participants || 1);
+      document.getElementById('modal-team-kpi-amount').textContent = formatCurrencyExact(team.amount);
+      
+      let goal = team.goal || 0;
+      let goalEl = document.getElementById('modal-team-kpi-goal');
+      if (goalEl) goalEl.textContent = goal > 0 ? formatCurrencyExact(goal) : 'Non fixé';
+      
+      let pctGoalStr = goal > 0 ? ((team.amount / goal) * 100).toFixed(1).replace('.', ',') + ' %' : (appState.kpis.totalDonations > 0 ? ((team.amount / appState.kpis.totalDonations) * 100).toFixed(1).replace('.', ',') + ' %' : '0,0 %');
+      document.getElementById('modal-team-kpi-pct').textContent = pctGoalStr;
+
+      let avgMember = members.length > 0 ? (team.amount / members.length) : (team.participants > 0 ? team.amount / team.participants : 0);
+      document.getElementById('modal-team-avg-member').textContent = `Moyenne : ${formatCurrencyExact(avgMember)} / membre`;
+      document.getElementById('modal-team-members-header').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Membres inscrits et dons attribués (${members.length})`;
+
+      let tbody = document.getElementById('modal-team-members-tbody');
+      if (members.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--slate-400); padding: 1.5rem;">Aucun marcheur individuel rattaché explicitement. Les dons apparaissent dans les totaux d'équipe.</td></tr>`;
+      } else {
+        tbody.innerHTML = members.map((m, idx) => `
+          <tr>
+            <td style="text-align: center; font-weight: 700; color: var(--slate-400);">${idx + 1}</td>
+            <td style="font-weight: 700; color: var(--slate-900);">${escapeHtml(m.firstName)} ${escapeHtml(m.lastName)}</td>
+            <td style="text-align: center;">
+              ${m.isCaptain || (team.captain && team.captain.toLowerCase().includes(m.lastName.toLowerCase())) ? `<span style="font-size: 0.65rem; background: var(--amber-50); color: var(--amber-600); border: 1px solid rgba(217,119,6,0.2); padding: 0.1rem 0.4rem; border-radius: 9999px; font-weight: 700;">Capitaine</span>` : `<span style="font-size: 0.65rem; color: var(--slate-400);">Marcheur</span>`}
+            </td>
+            <td class="tabular-nums" style="text-align: right; font-weight: 900; color: var(--blue-700);">${formatCurrencyExact(m.totalAmount)}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Direct team donations callout
+      let directBox = document.getElementById('modal-team-direct-donations-box');
+      if (team.directDonations && team.directDonations > 0) {
+        document.getElementById('modal-team-direct-amount').textContent = formatCurrencyExact(team.directDonations);
+        directBox.style.display = 'block';
+      } else {
+        directBox.style.display = 'none';
+      }
+
+      document.getElementById('modal-team').classList.add('open');
+    }
+
+    function closeTeamModal() {
+      document.getElementById('modal-team').classList.remove('open');
+    }
+
+    /* Modal: Targets */
+    function openTargetsModal() {
+      document.getElementById('input-target-amount').value = appState.targets.amountGoal;
+      document.getElementById('input-target-participants').value = appState.targets.participants;
+      document.getElementById('input-target-teams').value = appState.targets.teams;
+      document.getElementById('modal-targets').classList.add('open');
+    }
+
+    function closeTargetsModal() {
+      document.getElementById('modal-targets').classList.remove('open');
+    }
+
+    function handleSaveTargets(e) {
+      e.preventDefault();
+      let amt = parseFloat(document.getElementById('input-target-amount').value) || 165000;
+      let part = parseInt(document.getElementById('input-target-participants').value, 10) || 200;
+      let teams = parseInt(document.getElementById('input-target-teams').value, 10) || 30;
+
+      appState.targets = { amountGoal: amt, participants: part, teams: teams };
+      saveState();
+      renderApp();
+      closeTargetsModal();
+      triggerConfetti();
+    }
+
+    function resetDefaultTargets() {
+      document.getElementById('input-target-amount').value = REFERENCE_DATA.targets.amountGoal;
+      document.getElementById('input-target-participants').value = REFERENCE_DATA.targets.participants;
+      document.getElementById('input-target-teams').value = REFERENCE_DATA.targets.teams;
+    }
+
+    /* Modal: Reset Confirmation */
+    function confirmReset() {
+      document.getElementById('modal-reset').classList.add('open');
+    }
+
+    function closeResetModal() {
+      document.getElementById('modal-reset').classList.remove('open');
+    }
+
+    function executeReset() {
+      appState = JSON.parse(JSON.stringify(REFERENCE_DATA));
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      saveState();
+      renderApp();
+      closeResetModal();
+      dismissReconciliationAlert();
+    }
+
+    /* Modal: Import CSV */
+    function openImportModal() {
+      document.getElementById('import-error-box').style.display = 'none';
+      updateImportModalUI();
+      document.getElementById('modal-import').classList.add('open');
+    }
+
+    function closeImportModal() {
+      document.getElementById('modal-import').classList.remove('open');
+    }
+
+    function triggerMultiFileInput() {
+      document.getElementById('multi-file-input').click();
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('multi-drop-zone').classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('multi-drop-zone').classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('multi-drop-zone').classList.remove('dragover');
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleMultiFilesSelected(e.dataTransfer.files);
+      }
+    }
+
+    async function handleMultiFilesSelected(files) {
+      if (!files || files.length === 0) return;
+      document.getElementById('import-error-box').style.display = 'none';
+
+      for (let i = 0; i < files.length; i++) {
+        let f = files[i];
+        let text = await readFileAsText(f);
+        let parsed = parseCSV(text);
+        let detected = detectCSVType(f.name, parsed);
+
+        if (detected) {
+          uploadedFiles[detected] = { file: f, name: f.name, data: parsed };
+        } else {
+          // If 3 files dropped in order: gifts, participants, teams
+          if (!uploadedFiles.gifts) uploadedFiles.gifts = { file: f, name: f.name, data: parsed };
+          else if (!uploadedFiles.participants) uploadedFiles.participants = { file: f, name: f.name, data: parsed };
+          else if (!uploadedFiles.teams) uploadedFiles.teams = { file: f, name: f.name, data: parsed };
+        }
+      }
+      updateImportModalUI();
+    }
+
+    async function handleSingleFileSelected(file, type) {
+      if (!file) return;
+      let text = await readFileAsText(file);
+      let parsed = parseCSV(text);
+      uploadedFiles[type] = { file: file, name: file.name, data: parsed };
+      updateImportModalUI();
+    }
+
+    function readFileAsText(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = err => reject(err);
+        reader.readAsText(file, 'utf-8');
+      });
+    }
+
+    function updateImportModalUI() {
+      ['gifts', 'participants', 'teams'].forEach(type => {
+        let info = uploadedFiles[type];
+        let statusEl = document.getElementById(`slot-status-${type}`);
+        let descEl = document.getElementById(`slot-desc-${type}`);
+        if (info) {
+          statusEl.innerHTML = `<span style="color: var(--emerald-600); font-weight: 800;">✓ Prêt (${info.data.length} lignes)</span>`;
+          descEl.innerHTML = `<strong>${escapeHtml(info.name)}</strong> · ${info.data.length} lignes chargées`;
+        } else {
+          statusEl.innerHTML = `<span style="color: var(--slate-400);">Non sélectionné</span>`;
+        }
+      });
+
+      let hasAny = !!(uploadedFiles.gifts || uploadedFiles.participants || uploadedFiles.teams);
+      document.getElementById('btn-apply-import').disabled = !hasAny;
+    }
+
+    function clearImportSelection() {
+      uploadedFiles = { gifts: null, participants: null, teams: null };
+      document.getElementById('file-input-gifts').value = '';
+      document.getElementById('file-input-participants').value = '';
+      document.getElementById('file-input-teams').value = '';
+      document.getElementById('multi-file-input').value = '';
+      updateImportModalUI();
+    }
+
+    function processAndApplyImport() {
+      try {
+        let payload = {
+          gifts: uploadedFiles.gifts ? uploadedFiles.gifts.data : null,
+          participants: uploadedFiles.participants ? uploadedFiles.participants.data : null,
+          teams: uploadedFiles.teams ? uploadedFiles.teams.data : null
+        };
+
+        let reconciled = reconcileCampaignData(payload, appState);
+        appState = reconciled;
+        saveState();
+        renderApp();
+        closeImportModal();
+        triggerConfetti();
+
+        // Show reconciliation banner
+        let banner = document.getElementById('reconciliation-alert');
+        let titleEl = document.getElementById('reconciliation-alert-title');
+        let descEl = document.getElementById('reconciliation-alert-desc');
+        titleEl.textContent = 'Données réconciliées et synchronisées avec succès';
+        descEl.textContent = appState.diagnostics ? appState.diagnostics.reconciliationMessage : 'Les 3 rapports ont été croisés avec succès.';
+        banner.style.display = 'block';
+
+      } catch (err) {
+        let errBox = document.getElementById('import-error-box');
+        errBox.textContent = `Erreur lors de la réconciliation : ${err.message || err}`;
+        errBox.style.display = 'block';
+      }
+    }
+
+    function dismissReconciliationAlert() {
+      document.getElementById('reconciliation-alert').style.display = 'none';
+    }
+
+    /* ==========================================================================
+       8. EXPORT CSV & STANDALONE HTML
+       ========================================================================== */
+    function exportContributorsCSV() {
+      let data = (appState.topContributors || []).map((c, idx) => ({
+        "Rang": idx + 1,
+        "Nom": c.lastName,
+        "Prénom": c.firstName,
+        "Équipe": c.team,
+        "Rôle": c.isCaptain ? "Capitaine" : "Marcheur",
+        "Montant amassé ($)": c.totalAmount,
+        "Nombre de dons": c.donorCount || 0
+      }));
+      downloadCSV('relais_pour_la_vie_2027_contributeurs.csv', data);
+    }
+
+    function exportTeamsCSV() {
+      let total = appState.kpis.totalDonations || 1;
+      let data = (appState.allTeams || []).map((t, idx) => ({
+        "Rang": idx + 1,
+        "Nom de l'équipe": t.name,
+        "Capitaine": t.captain || "N/A",
+        "Nombre de participants": t.participants,
+        "Objectif ($)": t.goal || 0,
+        "% Objectif": (t.goal && t.goal > 0) ? ((t.amount / t.goal) * 100).toFixed(1) + "%" : "N/A",
+        "Montant amassé ($)": t.amount,
+        "% de la campagne": ((t.amount / total) * 100).toFixed(1) + "%",
+        "Dons directs d'équipe ($)": t.directDonations || 0
+      }));
+      downloadCSV('relais_pour_la_vie_2027_equipes.csv', data);
+    }
+
+    function downloadCSV(filename, rows) {
+      if (!rows || rows.length === 0) return;
+      let headers = Object.keys(rows[0]);
+      let csvContent = [
+        headers.join(';'),
+        ...rows.map(r => headers.map(h => {
+          let v = r[h] === null || r[h] === undefined ? '' : String(r[h]);
+          if (v.includes(';') || v.includes('"') || v.includes('\n')) {
+            v = `"${v.replace(/"/g, '""')}"`;
+          }
+          return v;
+        }).join(';'))
+      ].join('\r\n');
+
+      let blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* Standalone HTML File Exporter */
+    function downloadAutonomousHtml() {
+      // Serializes current document HTML with current state injected as default
+      let docClone = document.documentElement.cloneNode(true);
+
+      // In the script, replace the initial REFERENCE_DATA with current appState
+      let scriptTags = docClone.querySelectorAll('script');
+      scriptTags.forEach(script => {
+        if (script.textContent.includes('const REFERENCE_DATA =')) {
+          let updatedScript = script.textContent.replace(
+            /const REFERENCE_DATA = \{[\s\S]*?\n    \};/,
+            `const REFERENCE_DATA = ${JSON.stringify(appState, null, 2)};`
+          );
+          script.textContent = updatedScript;
+        }
+      });
+
+      let fullHtml = '<!doctype html>\n' + docClone.outerHTML;
+      let blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = 'relais_pour_la_vie_2027_autonome.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* ==========================================================================
+       9. AUTONOMOUS LIGHTWEIGHT CONFETTI
+       ========================================================================== */
+    function triggerConfetti() {
+      let canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.display = 'block';
+      let ctx = canvas.getContext('2d');
+      let particles = [];
+      let colors = ['#0084FF', '#FFDE00', '#00509D', '#059669', '#F43F5E'];
+
+      for (let i = 0; i < 75; i++) {
+        particles.push({
+          x: canvas.width * 0.5,
+          y: canvas.height * 0.7,
+          vx: (Math.random() - 0.5) * 16,
+          vy: -Math.random() * 14 - 6,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          vrot: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      let frame = 0;
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.4; // gravity
+          p.vx *= 0.98;
+          p.rotation += p.vrot;
+          p.opacity -= 0.012;
+
+          if (p.opacity > 0) {
+            alive = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          }
+        });
+
+        frame++;
+        if (alive && frame < 120) {
+          requestAnimationFrame(render);
+        } else {
+          canvas.style.display = 'none';
+        }
+      }
+      requestAnimationFrame(render);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /* ==========================================================================
+       10. STATE PERSISTENCE & INITIALIZATION
+       ========================================================================== */
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
+      }
+    }
+
+    function loadState() {
+      try {
+        let stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch (e) {
+        console.warn('LocalStorage read failed:', e);
+      }
+      return JSON.parse(JSON.stringify(REFERENCE_DATA));
+    }
+
+    // Initialize on window load
+    window.addEventListener('DOMContentLoaded', () => {
+      appState = loadState();
+      renderApp();
+    });
+  </script>
+</body>
+</html>

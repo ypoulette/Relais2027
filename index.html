@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Relais pour la vie 2027 - Tableau de bord officiel</title>
   <meta name="description" content="Tableau de bord interactif autonome et haute fiabilité pour le Relais pour la vie 2027 de la Société canadienne du cancer." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -504,9 +507,20 @@
               </div>
             </button>
 
+            <!-- 5. Forcer l'actualisation / Vider le cache -->
+            <button class="gear-item" onclick="closeGearMenu(); forceRefreshCache();" role="menuitem" title="Force le rechargement de la dernière version publiée sur GitHub en vidant le cache du navigateur">
+              <div class="gear-item-icon" style="background: var(--blue-50); color: var(--blue-700);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: var(--slate-900);">Forcer l'actualisation</div>
+                <div style="font-size: 0.65rem; color: var(--slate-500); font-weight: 500;">Vider le cache &amp; charger la version publiée</div>
+              </div>
+            </button>
+
             <div class="gear-divider"></div>
 
-            <!-- 5. Réinitialiser -->
+            <!-- 6. Réinitialiser -->
             <button class="gear-item gear-item-danger" onclick="closeGearMenu(); setTimeout(() => confirmReset(), 50);" role="menuitem">
               <div class="gear-item-icon" style="background: var(--rose-50); color: var(--rose-600);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -1181,9 +1195,10 @@
     };
 
     /* ==========================================================================
-       2. APPLICATION STATE
+       2. APPLICATION STATE & STORAGE CONFIG
        ========================================================================== */
-    const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v8';
+    const APP_BUILD_ID = 'build_20261110_1730';
+    const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v9';
     let appState = null;
     let activeTab = 'dashboard';
     let chartMode = 'monthly';
@@ -1193,6 +1208,19 @@
     let sortContribDir = 'desc';
     let sortTeamField = 'amount';
     let sortTeamDir = 'desc';
+
+    function getReferenceSignature() {
+      return [
+        APP_BUILD_ID,
+        REFERENCE_DATA.lastUpdated || '',
+        (REFERENCE_DATA.targets && REFERENCE_DATA.targets.amountGoal) || 0,
+        (REFERENCE_DATA.targets && REFERENCE_DATA.targets.participants) || 0,
+        (REFERENCE_DATA.targets && REFERENCE_DATA.targets.teams) || 0,
+        (REFERENCE_DATA.kpis && REFERENCE_DATA.kpis.totalDonations) || 0,
+        (REFERENCE_DATA.topContributors ? REFERENCE_DATA.topContributors.length : 0),
+        (REFERENCE_DATA.allTeams ? REFERENCE_DATA.allTeams.length : 0)
+      ].join('::');
+    }
 
     // Temporary upload store
     let uploadedFiles = {
@@ -2451,6 +2479,7 @@
       let teams = parseInt(document.getElementById('input-target-teams').value, 10) || 30;
 
       appState.targets = { amountGoal: amt, participants: part, teams: teams };
+      appState._isCustomSession = true;
       saveState();
       renderApp();
       closeTargetsModal();
@@ -2474,7 +2503,11 @@
 
     function executeReset() {
       appState = JSON.parse(JSON.stringify(REFERENCE_DATA));
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      appState._isCustomSession = false;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.clear();
+      } catch (e) {}
       saveState();
       renderApp();
       closeResetModal();
@@ -2633,6 +2666,7 @@
 
         let reconciled = reconcileCampaignData(payload, appState);
         reconciled.lastUpdated = formattedLastUpdated;
+        reconciled._isCustomSession = true;
         appState = reconciled;
         saveState();
         renderApp();
@@ -2721,13 +2755,23 @@
       // Serializes current document HTML with current state injected as default
       let docClone = document.documentElement.cloneNode(true);
 
-      // In the script, replace the initial REFERENCE_DATA with current appState
+      // Clean session flags from appState before serializing as clean REFERENCE_DATA
+      let cleanRef = JSON.parse(JSON.stringify(appState));
+      delete cleanRef._isCustomSession;
+      delete cleanRef._referenceSignature;
+
+      // In the script, replace the initial REFERENCE_DATA with cleanRef
       let scriptTags = docClone.querySelectorAll('script');
       scriptTags.forEach(script => {
         if (script.textContent.includes('const REFERENCE_DATA =')) {
           let updatedScript = script.textContent.replace(
             /const REFERENCE_DATA = \{[\s\S]*?\n    \};/,
-            `const REFERENCE_DATA = ${JSON.stringify(appState, null, 2)};`
+            `const REFERENCE_DATA = ${JSON.stringify(cleanRef, null, 2)};`
+          );
+          // Also generate a new unique build id for the exported file
+          updatedScript = updatedScript.replace(
+            /const APP_BUILD_ID = '[^']*';/,
+            `const APP_BUILD_ID = 'export_${Date.now()}';`
           );
           script.textContent = updatedScript;
         }
@@ -2819,19 +2863,62 @@
     /* ==========================================================================
        10. STATE PERSISTENCE & INITIALIZATION
        ========================================================================== */
+    function forceRefreshCache() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {}
+      let url = new URL(window.location.href);
+      url.searchParams.set('_v', Date.now());
+      window.location.replace(url.href);
+    }
+
     function saveState() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        if (!appState) return;
+        appState._referenceSignature = getReferenceSignature();
+        // Only persist in localStorage if the user has custom imported CSV data or edited targets
+        if (appState._isCustomSession) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        } else {
+          try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        }
       } catch (e) {
         console.warn('LocalStorage save failed:', e);
       }
     }
 
     function loadState() {
+      const currentSignature = getReferenceSignature();
       try {
-        let stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          return JSON.parse(stored);
+        // Support URL parameter ?reset=1 or ?fresh=1 to force bypass
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('reset') || urlParams.has('fresh')) {
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+            sessionStorage.clear();
+          } catch (e) {}
+          urlParams.delete('reset');
+          urlParams.delete('fresh');
+          const cleanUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+          window.history.replaceState({}, '', cleanUrl);
+          return JSON.parse(JSON.stringify(REFERENCE_DATA));
+        }
+
+        let storedRaw = localStorage.getItem(STORAGE_KEY);
+        if (storedRaw) {
+          let stored = JSON.parse(storedRaw);
+          // Automatic cache invalidation:
+          // If stored state is from an older version or different REFERENCE_DATA, discard it immediately!
+          if (!stored || stored._referenceSignature !== currentSignature) {
+            console.info('Nouvelle version publiée détectée. Purge du cache local et application des nouvelles données.');
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            return JSON.parse(JSON.stringify(REFERENCE_DATA));
+          }
+          if (stored._isCustomSession) {
+            return stored;
+          }
         }
       } catch (e) {
         console.warn('LocalStorage read failed:', e);

@@ -1854,10 +1854,10 @@
       result.topTeams = allTeamsList.slice(0, 10);
       result.monthlyProgress = finalMonthlyProgress;
 
-      if (filesData && filesData.fileDate) {
-        result.lastUpdated = filesData.fileDate;
-      } else if (previousState && previousState.lastUpdated) {
-        result.lastUpdated = previousState.lastUpdated;
+      if (rawFiles && rawFiles.fileDate) {
+        result.lastUpdated = rawFiles.fileDate;
+      } else if (existingData && existingData.lastUpdated) {
+        result.lastUpdated = existingData.lastUpdated;
       } else {
         result.lastUpdated = '7 novembre 2026';
       }

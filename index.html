@@ -1197,7 +1197,7 @@
     /* ==========================================================================
        2. APPLICATION STATE & STORAGE CONFIG
        ========================================================================== */
-    const APP_BUILD_ID = 'build_20261110_1730';
+    const APP_BUILD_ID = 'build_20261111_0815';
     const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v9';
     let appState = null;
     let activeTab = 'dashboard';
@@ -2926,10 +2926,55 @@
       return JSON.parse(JSON.stringify(REFERENCE_DATA));
     }
 
+    /* Remote Update Auto-Detection (Mobile Safari & Desktop Cache Bypass) */
+    async function checkRemoteVersion() {
+      if (!window.location.protocol.startsWith('http')) return;
+      try {
+        let checkUrl = window.location.pathname + '?_t=' + Date.now();
+        let res = await fetch(checkUrl, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
+        });
+        if (res.ok) {
+          let text = await res.text();
+          let match = text.match(/const\s+APP_BUILD_ID\s*=\s*'([^']+)'/);
+          if (match && match[1] && match[1] !== APP_BUILD_ID) {
+            console.info(`Mise à jour détectée sur le serveur (${match[1]} vs ${APP_BUILD_ID}). Rechargement automatique...`);
+            try {
+              localStorage.removeItem(STORAGE_KEY);
+              localStorage.clear();
+              sessionStorage.clear();
+            } catch (e) {}
+            window.location.replace(window.location.pathname + '?_fresh=' + Date.now());
+          }
+        }
+      } catch (e) {
+        // Quietly ignore network failures in offline situations
+      }
+    }
+
     // Initialize on window load & global listeners
     window.addEventListener('DOMContentLoaded', () => {
       appState = loadState();
       renderApp();
+      checkRemoteVersion();
+    });
+
+    // Detect when page is restored from iOS Safari back-forward cache (BFCache)
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        checkRemoteVersion();
+      }
+    });
+
+    // Detect when user switches back to Safari tab on iPad / iPhone
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkRemoteVersion();
+      }
     });
 
     // Close gear dropdown on outside click or Escape key

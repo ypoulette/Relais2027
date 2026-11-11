@@ -474,14 +474,14 @@
               </div>
             </button>
 
-            <!-- 2. Fichier autonome (.html) -->
-            <button class="gear-item" onclick="closeGearMenu(); downloadAutonomousHtml();" role="menuitem">
-              <div class="gear-item-icon" style="background: var(--amber-50); color: var(--amber-700);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5"/></svg>
+            <!-- 2. Enregistrer index.html (pour GitHub) -->
+            <button class="gear-item" onclick="closeGearMenu(); saveUpdatedHtmlFile();" role="menuitem">
+              <div class="gear-item-icon" style="background: var(--emerald-50); color: var(--emerald-700);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               </div>
               <div style="flex: 1;">
-                <div style="font-weight: 700; color: var(--slate-900);">Fichier autonome (.html)</div>
-                <div style="font-size: 0.65rem; color: var(--slate-500); font-weight: 500;">Télécharger avec données intégrées</div>
+                <div style="font-weight: 700; color: var(--slate-900);">Enregistrer index.html (pour GitHub)</div>
+                <div style="font-size: 0.65rem; color: var(--slate-500); font-weight: 500;">Mettre à jour le fichier pour GitHub Desktop</div>
               </div>
             </button>
 
@@ -536,16 +536,25 @@
     </header>
 
     <!-- Notification Banner (Reconciliation feedback) -->
-    <div id="reconciliation-alert" class="card no-print" style="display: none; padding: 0.75rem 1rem; background: var(--emerald-50); border-color: rgba(5, 150, 105, 0.3);">
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">
-        <div style="display: flex; align-items: center; gap: 0.65rem;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    <div id="reconciliation-alert" class="card no-print" style="display: none; padding: 0.85rem 1.15rem; background: var(--emerald-50); border-color: rgba(5, 150, 105, 0.35); box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.1);">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem; flex: 1; min-width: 260px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.5" style="flex-shrink: 0; margin-top: 0.15rem;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
           <div>
-            <div id="reconciliation-alert-title" style="font-size: 0.8rem; font-weight: 700; color: #065f46;">Données réconciliées avec succès</div>
-            <div id="reconciliation-alert-desc" style="font-size: 0.7rem; color: #047857;">Détails de la réconciliation automatique</div>
+            <div id="reconciliation-alert-title" style="font-size: 0.85rem; font-weight: 800; color: #065f46;">Données réconciliées avec succès</div>
+            <div id="reconciliation-alert-desc" style="font-size: 0.72rem; color: #047857; margin-top: 0.15rem; line-height: 1.4;">Détails de la réconciliation automatique</div>
+            <div style="font-size: 0.68rem; color: #065f46; margin-top: 0.35rem; font-weight: 500;">
+              💡 <strong>Pour mettre à jour GitHub Desktop et le site en ligne :</strong> cliquez sur le bouton vert ci-contre pour enregistrer <code>index.html</code>.
+            </div>
           </div>
         </div>
-        <button onclick="dismissReconciliationAlert()" style="background: none; border: none; cursor: pointer; color: #065f46; font-size: 1.1rem; font-weight: bold;">&times;</button>
+        <div style="display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0;">
+          <button id="btn-banner-save" class="btn" onclick="saveUpdatedHtmlFile()" style="background: var(--emerald-600); color: #fff; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.9rem; border-radius: 0.375rem; box-shadow: 0 2px 4px rgba(0,0,0,0.12); border: none; cursor: pointer; transition: all 0.15s ease;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Enregistrer index.html
+          </button>
+          <button onclick="dismissReconciliationAlert()" style="background: none; border: none; cursor: pointer; color: #065f46; font-size: 1.3rem; font-weight: bold; padding: 0.2rem 0.4rem; line-height: 1;" title="Fermer cette notification">&times;</button>
+        </div>
       </div>
     </div>
 
@@ -2749,44 +2758,101 @@
       URL.revokeObjectURL(url);
     }
 
-    /* Standalone HTML File Exporter */
-    function downloadAutonomousHtml() {
-      closeGearMenu();
-      // Serializes current document HTML with current state injected as default
+    /* Standalone HTML Builder (Injects current appState into clean REFERENCE_DATA) */
+    function buildAutonomousHtmlString() {
       let docClone = document.documentElement.cloneNode(true);
 
       // Clean session flags from appState before serializing as clean REFERENCE_DATA
-      let cleanRef = JSON.parse(JSON.stringify(appState));
+      let cleanRef = JSON.parse(JSON.stringify(appState || REFERENCE_DATA));
       delete cleanRef._isCustomSession;
       delete cleanRef._referenceSignature;
 
-      // In the script, replace the initial REFERENCE_DATA with cleanRef
+      // Unique build id: build_YYYYMMDD_HHMMSS
+      let d = new Date();
+      let pad = (n) => String(n).padStart(2, '0');
+      let newBuildId = 'build_' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '_' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+
+      // In the script tags, replace REFERENCE_DATA and APP_BUILD_ID
       let scriptTags = docClone.querySelectorAll('script');
+      let replaced = false;
       scriptTags.forEach(script => {
         if (script.textContent.includes('const REFERENCE_DATA =')) {
           let updatedScript = script.textContent.replace(
-            /const REFERENCE_DATA = \{[\s\S]*?\n    \};/,
+            /const REFERENCE_DATA = \{[\s\S]*?\n\s*\};/,
             `const REFERENCE_DATA = ${JSON.stringify(cleanRef, null, 2)};`
           );
-          // Also generate a new unique build id for the exported file
           updatedScript = updatedScript.replace(
             /const APP_BUILD_ID = '[^']*';/,
-            `const APP_BUILD_ID = 'export_${Date.now()}';`
+            `const APP_BUILD_ID = '${newBuildId}';`
           );
           script.textContent = updatedScript;
+          replaced = true;
         }
       });
 
-      let fullHtml = '<!doctype html>\n' + docClone.outerHTML;
-      let blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = 'relais_pour_la_vie_2027_autonome.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Ensure menus, modals, and reconciliation banner are closed in saved file
+      docClone.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('show'));
+      docClone.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('open'));
+      let alertInClone = docClone.querySelector('#reconciliation-alert');
+      if (alertInClone) {
+        alertInClone.style.display = 'none';
+      }
+
+      return '<!doctype html>\n' + docClone.outerHTML;
+    }
+
+    /* Primary Save / Export Function (Native Save dialog with download fallback) */
+    async function saveUpdatedHtmlFile() {
+      closeGearMenu();
+      try {
+        let fullHtml = buildAutonomousHtmlString();
+
+        // 1. Modern File System Access API (Google Chrome, Microsoft Edge on Windows)
+        if (window.showSaveFilePicker) {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: 'index.html',
+              types: [{
+                description: 'Fichier HTML (index.html)',
+                accept: { 'text/html': ['.html', '.htm'] }
+              }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(fullHtml);
+            await writable.close();
+
+            alert("✅ Fichier index.html enregistré avec succès !\n\nLe fichier a été mis à jour directement sur votre disque avec les nouvelles données intégrées.\n\nVous pouvez maintenant ouvrir GitHub Desktop :\n1. GitHub Desktop détectera automatiquement la modification de 'index.html'.\n2. Cliquez sur « Commit to main » puis sur « Push origin » pour mettre à jour le site web en direct !");
+            return;
+          } catch (pickerErr) {
+            if (pickerErr.name === 'AbortError') {
+              // User clicked Cancel in the Save dialog
+              return;
+            }
+            console.warn('showSaveFilePicker not permitted or failed, falling back to download:', pickerErr);
+          }
+        }
+
+        // 2. Standard browser download fallback
+        let blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8;' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert("📥 Fichier index.html téléchargé !\n\nPour mettre à jour GitHub Desktop et votre site web :\n1. Récupérez 'index.html' dans votre dossier Téléchargements.\n2. Copiez-le dans votre dossier GITHUB\\Relais2027 (ou lancez Copier_vers_GitHub.bat).\n3. Ouvrez GitHub Desktop pour faire « Commit » et « Push ».");
+
+      } catch (err) {
+        alert("Erreur lors de la sauvegarde du fichier : " + (err.message || err));
+      }
+    }
+
+    /* Backward-compatibility alias */
+    function downloadAutonomousHtml() {
+      saveUpdatedHtmlFile();
     }
 
     /* ==========================================================================

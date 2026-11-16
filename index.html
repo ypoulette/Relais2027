@@ -443,7 +443,7 @@
           <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--slate-600); background: var(--slate-50); border: 1px solid var(--slate-200); padding: 0.25rem 0.65rem; border-radius: 0.375rem;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-400)" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect></svg>
             <span>Mise à jour :</span>
-            <strong id="header-last-updated" style="color: var(--slate-900); font-weight: 700;">10 novembre 2026</strong>
+            <strong id="header-last-updated" style="color: var(--slate-900); font-weight: 700;">16 novembre 2026</strong>
           </div>
         </div>
         <!-- Menu Style Engrenage (Actions & Réglages) -->
@@ -535,13 +535,13 @@
     </header>
 
     <!-- Notification Banner (Reconciliation feedback) -->
-    <div id="reconciliation-alert" class="card no-print" style="display: none; padding: 0.85rem 1.15rem; background: var(--emerald-50); border-color: rgba(5, 150, 105, 0.35); box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.1);">
+    <div id="reconciliation-alert" class="card no-print" style="display: none; padding: 0.85rem 1.15rem; background: var(--emerald-50); border-color: rgba(5, 150, 105, 0.35); box-shadow: rgba(5, 150, 105, 0.1) 0px 4px 6px -1px;">
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
         <div style="display: flex; align-items: flex-start; gap: 0.75rem; flex: 1; min-width: 260px;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-600)" stroke-width="2.5" style="flex-shrink: 0; margin-top: 0.15rem;"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
           <div>
-            <div id="reconciliation-alert-title" style="font-size: 0.85rem; font-weight: 800; color: #065f46;">Données réconciliées avec succès</div>
-            <div id="reconciliation-alert-desc" style="font-size: 0.72rem; color: #047857; margin-top: 0.15rem; line-height: 1.4;">Détails de la réconciliation automatique</div>
+            <div id="reconciliation-alert-title" style="font-size: 0.85rem; font-weight: 800; color: #065f46;">Données réconciliées avec succès · Mise à jour : 16 novembre 2026</div>
+            <div id="reconciliation-alert-desc" style="font-size: 0.72rem; color: #047857; margin-top: 0.15rem; line-height: 1.4;">1 dons attribués à 8 marcheurs, 0 dons directs d'équipe, 4 équipes actives.</div>
             <div style="font-size: 0.68rem; color: #065f46; margin-top: 0.35rem; font-weight: 500;">
               💡 <strong>Pour mettre à jour GitHub Desktop et le site en ligne :</strong> cliquez sur le bouton vert ci-contre pour enregistrer <code>index.html</code>.
             </div>
@@ -1452,10 +1452,10 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 1. Gift Details Report (.csv)
               </span>
-              <span id="slot-status-gifts" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+              <span id="slot-status-gifts" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);"><span style="color: var(--emerald-600); font-weight: 800;">✓ Prêt (1 lignes)</span></span>
             </div>
             <input type="file" id="file-input-gifts" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'gifts')" style="font-size: 0.75rem; width: 100%;">
-            <div id="slot-desc-gifts" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Transactions détaillées de tous les dons, montants, dates et bénéficiaires.</div>
+            <div id="slot-desc-gifts" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;"><strong>3 b) Gift Details Report with date filters 980272.csv</strong> · 1 lignes chargées · Fichier du 16 novembre 2026</div>
           </div>
 
           <!-- Slot 2: Participant Registration -->
@@ -1465,10 +1465,10 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 2. Participant Registration Report_by event (.csv)
               </span>
-              <span id="slot-status-participants" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+              <span id="slot-status-participants" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);"><span style="color: var(--emerald-600); font-weight: 800;">✓ Prêt (8 lignes)</span></span>
             </div>
             <input type="file" id="file-input-participants" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'participants')" style="font-size: 0.75rem; width: 100%;">
-            <div id="slot-desc-participants" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Registre des marcheurs, rôle (capitaine/membre/solo), équipe de rattachement.</div>
+            <div id="slot-desc-participants" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;"><strong>4 a) Participant Registration Report_by event 980273.csv</strong> · 8 lignes chargées · Fichier du 16 novembre 2026</div>
           </div>
 
           <!-- Slot 3: Team Performance -->
@@ -1478,10 +1478,10 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 3. Team Performance Report (.csv)
               </span>
-              <span id="slot-status-teams" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);">Non sélectionné</span>
+              <span id="slot-status-teams" style="font-size: 0.65rem; font-weight: 700; color: var(--slate-400);"><span style="color: var(--emerald-600); font-weight: 800;">✓ Prêt (4 lignes)</span></span>
             </div>
             <input type="file" id="file-input-teams" accept=".csv" onchange="handleSingleFileSelected(this.files[0], 'teams')" style="font-size: 0.75rem; width: 100%;">
-            <div id="slot-desc-teams" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;">Totaux officiels par équipe, capitaines et nombre de membres.</div>
+            <div id="slot-desc-teams" style="font-size: 0.68rem; color: var(--slate-500); margin-top: 0.25rem;"><strong>5) Team Performance Report 980237.csv</strong> · 4 lignes chargées · Fichier du 16 novembre 2026</div>
           </div>
         </div>
 
@@ -1492,7 +1492,7 @@
         <button class="btn btn-outline" onclick="clearImportSelection()">Effacer la sélection</button>
         <div style="display: flex; gap: 0.5rem;">
           <button class="btn btn-secondary" onclick="closeImportModal()">Annuler</button>
-          <button id="btn-apply-import" class="btn btn-primary" onclick="processAndApplyImport()" disabled="">Appliquer et actualiser</button>
+          <button id="btn-apply-import" class="btn btn-primary" onclick="processAndApplyImport()">Appliquer et actualiser</button>
         </div>
       </div>
     </div>
@@ -1551,7 +1551,7 @@
   </div>
 
   <!-- Confetti Canvas (Autonomous, zero external dependencies) -->
-  <canvas id="confetti-canvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 1000; display: none;"></canvas>
+  <canvas id="confetti-canvas" style="position: fixed; inset: 0px; pointer-events: none; z-index: 1000; display: none;" width="1912" height="948"></canvas>
 
   <!-- Application Logic -->
   <script>
@@ -1559,7 +1559,7 @@
        1. REFERENCE CAMPAIGN DATA (Relais pour la vie 2027)
        ========================================================================== */
     const REFERENCE_DATA = {
-  "lastUpdated": "10 novembre 2026",
+  "lastUpdated": "16 novembre 2026",
   "targets": {
     "participants": 200,
     "teams": 30,
@@ -1774,7 +1774,7 @@
     /* ==========================================================================
        2. APPLICATION STATE & STORAGE CONFIG
        ========================================================================== */
-    const APP_BUILD_ID = 'build_20261111_165728';
+    const APP_BUILD_ID = 'build_20261116_154544';
     const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v9';
     let appState = null;
     let activeTab = 'dashboard';

@@ -2278,7 +2278,7 @@
     /* ==========================================================================
        2. APPLICATION STATE & STORAGE CONFIG
        ========================================================================== */
-    const APP_BUILD_ID = 'build_20261126_090603';
+    const APP_BUILD_ID = 'build_20261126_090704';
     const STORAGE_KEY = 'relais_pour_la_vie_dashboard_data_v9';
     let appState = null;
     let activeTab = 'dashboard';
@@ -3129,12 +3129,16 @@
     }
 
     function getCaptainsList() {
-      let map = new Map();
+      let map = new Map(); // teamNorm -> captainObj
+
       // 1. From topContributors
       (appState.topContributors || []).forEach(c => {
         if (c.isCaptain) {
-          let key = `${normalizeText(c.firstName)}_${normalizeText(c.lastName)}`;
-          map.set(key, {
+          let teamNorm = normalizeText(c.team || '').replace(/[\s\-_]+/g, '');
+          if (!teamNorm || teamNorm.includes('solo')) {
+            teamNorm = 'indiv_' + normalizeText((c.firstName || '') + (c.lastName || '')).replace(/[\s\-_]+/g, '');
+          }
+          map.set(teamNorm, {
             firstName: c.firstName,
             lastName: c.lastName,
             team: c.team,
@@ -3149,10 +3153,10 @@
       // 2. From allTeams
       (appState.allTeams || []).forEach(t => {
         if (t.captain) {
-          let parts = splitFullName(t.captain);
-          let key = `${normalizeText(parts.firstName)}_${normalizeText(parts.lastName)}`;
-          if (!map.has(key)) {
-            map.set(key, {
+          let teamNorm = normalizeText(t.name || '').replace(/[\s\-_]+/g, '');
+          if (!map.has(teamNorm)) {
+            let parts = splitFullName(t.captain);
+            map.set(teamNorm, {
               firstName: parts.firstName,
               lastName: parts.lastName,
               team: t.name,
@@ -3162,10 +3166,10 @@
               isHope: false
             });
           } else {
-            let item = map.get(key);
-            if (!item.phone && t.captainPhone) item.phone = t.captainPhone;
-            if (!item.email && t.captainEmail) item.email = t.captainEmail;
-            if (!item.team) item.team = t.name;
+            let existing = map.get(teamNorm);
+            if (!existing.phone && t.captainPhone) existing.phone = t.captainPhone;
+            if (!existing.email && t.captainEmail) existing.email = t.captainEmail;
+            if (!existing.team) existing.team = t.name;
           }
         }
       });
